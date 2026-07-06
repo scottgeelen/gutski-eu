@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Dealer } from "@/lib/types";
 import type { Map as LeafletMap, Marker } from "leaflet";
 
@@ -18,6 +18,10 @@ export default function DealerMap({
   const mapRef = useRef<LeafletMap | null>(null);
   const markersRef = useRef<Record<string, Marker>>({});
   const LRef = useRef<typeof import("leaflet") | null>(null);
+  // Touch-vergrendeling: op touch-devices start de kaart "locked" (geen drag)
+  // met een overlay, zodat de kaart de paginascroll niet kaapt.
+  const [touch, setTouch] = useState(false);
+  const [active, setActive] = useState(false);
 
   // Init (leaflet alleen client-side laden)
   useEffect(() => {
@@ -26,7 +30,13 @@ export default function DealerMap({
       const L = (await import("leaflet")).default;
       if (cancelled || !containerRef.current || mapRef.current) return;
       LRef.current = L;
-      const map = L.map(containerRef.current, { scrollWheelZoom: false }).setView([50.5, 8.0], 5);
+      const isTouch =
+        typeof window !== "undefined" &&
+        window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+      const map = L.map(containerRef.current, {
+        scrollWheelZoom: false,
+        dragging: !isTouch,
+      }).setView([50.5, 8.0], 5);
       L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
         attribution:
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
@@ -46,6 +56,7 @@ export default function DealerMap({
         map.fitBounds(L.latLngBounds(dealers.map((d) => [d.lat, d.lng] as [number, number])).pad(0.3));
       }
       mapRef.current = map;
+      if (!cancelled) setTouch(isTouch);
     })();
     return () => {
       cancelled = true;
@@ -55,6 +66,32 @@ export default function DealerMap({
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Kaart activeren na een tik op de overlay
+  const activate = () => {
+    mapRef.current?.dragging.enable();
+    setActive(true);
+  };
+
+  // Opnieuw vergrendelen zodra de gebruiker buiten de kaart scrollt of tikt
+  useEffect(() => {
+    if (!touch || !active) return;
+    const relock = () => {
+      mapRef.current?.dragging.disable();
+      setActive(false);
+    };
+    const onPointer = (e: Event) => {
+      const el = containerRef.current;
+      if (el && e.target instanceof Node && el.contains(e.target)) return;
+      relock();
+    };
+    window.addEventListener("scroll", relock, { passive: true });
+    window.addEventListener("pointerdown", onPointer, true);
+    return () => {
+      window.removeEventListener("scroll", relock);
+      window.removeEventListener("pointerdown", onPointer, true);
+    };
+  }, [touch, active]);
 
   // Zichtbaarheid van markers bij filteren
   useEffect(() => {
@@ -86,5 +123,14 @@ export default function DealerMap({
     }
   }, [focusId, dealers]);
 
-  return <div id="map" ref={containerRef} />;
+  return (
+    <div className="map-shell">
+      <div id="map" ref={containerRef} />
+      {touch && !active && (
+        <button type="button" className="map-unlock" onClick={activate}>
+          <span>Tik om de kaart te bedienen</span>
+        </button>
+      )}
+    </div>
+  );
 }

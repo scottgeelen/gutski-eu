@@ -35,6 +35,9 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
+  // /admin/login (en overige admin-paden) buiten de locale-rewrite houden
+  if (pathname.startsWith("/admin")) return NextResponse.next();
+
   // Locale-routing: NL op de root, /de en /en als subfolders
   const seg = pathname.split("/")[1];
   if ((locales as readonly string[]).includes(seg)) {

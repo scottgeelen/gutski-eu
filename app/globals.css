@@ -60,6 +60,39 @@ nav .logo-mark{height:38px;width:31px}
 .btn.small{padding:9px 18px;font-size:.85rem}
 :focus-visible{outline:2px solid var(--glacier);outline-offset:3px;border-radius:4px}
 
+/* ---------- MOBIEL MENU ---------- */
+.nav-burger{
+  display:none; /* alleen ≤768px zichtbaar (zie responsive) */
+  width:44px;height:44px;flex-direction:column;align-items:center;justify-content:center;gap:5px;
+  background:none;border:0;cursor:pointer;color:var(--ice);position:relative;z-index:70;
+}
+.nav-burger span{display:block;width:24px;height:2px;border-radius:2px;background:currentColor;transition:transform .3s ease,opacity .2s ease}
+.nav-burger.on span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-burger.on span:nth-child(2){opacity:0}
+.nav-burger.on span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mobile-menu{
+  position:fixed;inset:0;z-index:65;
+  display:flex;flex-direction:column;
+  padding:calc(72px + env(safe-area-inset-top)) clamp(24px,7vw,48px) calc(40px + env(safe-area-inset-bottom));
+  background:rgba(10,19,34,.92);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  opacity:0;visibility:hidden;transform:translateY(-14px);
+  transition:opacity .32s ease,transform .32s ease,visibility .32s;
+}
+.mobile-menu.open{opacity:1;visibility:visible;transform:none}
+.mobile-menu-links{display:flex;flex-direction:column;gap:4px;margin-top:24px}
+.mobile-menu-links a{
+  font-family:var(--font-syne),sans-serif;font-weight:800;text-transform:uppercase;
+  font-size:clamp(2rem,10vw,3rem);line-height:1.15;letter-spacing:-.01em;
+  color:var(--ice);padding:8px 0;transition:color .2s;
+}
+.mobile-menu-links a:hover,.mobile-menu-links a:active{color:var(--glacier)}
+.mobile-menu-foot{margin-top:auto;display:flex;flex-direction:column;gap:22px}
+.mobile-menu-foot .lang{align-self:flex-start;font-size:.82rem}
+.mobile-menu-foot .lang a{color:var(--powder);padding:11px 18px;letter-spacing:.1em;transition:background .2s,color .2s}
+.mobile-menu-foot .lang a.on{background:var(--glacier);color:var(--night);font-weight:600}
+.mobile-menu-foot .btn{justify-content:center;width:100%}
+
 /* ---------- HERO ---------- */
 header{
   position:relative;min-height:100svh;
@@ -259,11 +292,24 @@ section{position:relative;padding:clamp(80px,11vw,140px) 0}
 .dealer .cc{font-family:var(--font-dm-mono),monospace;font-size:.7rem;color:var(--glacier);border:1px solid var(--line);border-radius:6px;padding:2px 7px;flex:none}
 .dealer p{color:var(--powder);font-size:.88rem;margin-top:5px}
 .dealer .dist{font-family:var(--font-dm-mono),monospace;font-size:.75rem;color:var(--powder);margin-top:8px;display:block}
+.map-shell{position:relative;min-height:600px}
 #map{
   border-radius:var(--radius);border:1px solid var(--line);
   min-height:600px;background:var(--panel);
   position:relative;z-index:1;
 }
+.map-unlock{
+  position:absolute;inset:0;z-index:2;
+  display:flex;align-items:center;justify-content:center;
+  border:0;border-radius:var(--radius);cursor:pointer;color:var(--ice);font:inherit;
+  background:rgba(10,19,34,.5);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+}
+.map-unlock span{
+  display:inline-flex;align-items:center;gap:10px;
+  background:rgba(10,19,34,.86);border:1px solid var(--line);border-radius:99px;
+  padding:13px 22px;font-weight:600;font-size:.95rem;
+}
+.map-unlock span::before{content:"👆";font-size:1.1rem}
 .map-fallback{display:flex;align-items:center;justify-content:center;height:100%;color:var(--powder);padding:40px;text-align:center}
 .leaflet-container{background:#0C1830;font:inherit}
 .gts-pin{
@@ -321,16 +367,58 @@ footer{border-top:1px solid var(--line);padding:70px 0 40px;background:#081020}
   .grid-cards{grid-template-columns:repeat(2,1fr)}
   .locator-shell{grid-template-columns:1fr}
   #map{min-height:440px}
+  .map-shell{min-height:440px}
   .loc-list{max-height:340px}
   .story,.config{grid-template-columns:1fr;gap:44px}
   .foot-grid{grid-template-columns:1fr 1fr}
   .cta-banner{grid-template-columns:1fr}
 }
+@media(max-width:768px){
+  /* Mobiel menu vervangt de nav-links */
+  .nav-links{display:none}
+  .nav-burger{display:flex}
+
+  /* iOS zoomt niet in op focus zolang inputs ≥16px zijn */
+  input,select,textarea{font-size:16px!important}
+
+  /* Tap-targets minimaal 44px */
+  .chips button,.dots button{min-height:44px}
+  .chips button{min-width:44px}
+  .dots button{min-width:44px;width:44px;height:44px}
+  .lang a,.lang button{min-height:44px;display:inline-flex;align-items:center}
+  .btn.small{min-height:44px;padding:11px 20px}
+
+  /* Compactere secties */
+  :root{--cut:clamp(20px,4vw,40px)}
+  section{padding:clamp(64px,9vw,110px) 0}
+  .marquee-track span{font-size:.9rem}
+
+  /* CTA-banner laten passen */
+  .cta-banner{padding:clamp(32px,7vw,44px)}
+  .cta-banner::after{font-size:5rem;right:-16px;bottom:-28px}
+
+  /* Filmstrip + kaart */
+  .strip figure{width:min(320px,82vw)}
+  #map{min-height:420px}
+  .map-shell{min-height:420px}
+}
 @media(max-width:640px){
-  .nav-links a:not(.btn){display:none}
   .grid-cards{grid-template-columns:1fr}
   .groups{grid-template-columns:1fr}
   .hero-meta{gap:22px}
+}
+@media(max-width:480px){
+  /* Hero-CTA knoppen full-width onder elkaar */
+  .hero-cta{flex-direction:column;align-items:stretch}
+  .hero-cta .btn{width:100%;justify-content:center}
+  .hero-inner{padding:110px 0 140px}
+  .hero-meta{gap:16px;margin-top:48px}
+  .hero-meta div strong{font-size:1.3rem}
+  .hero-meta div span{font-size:.8rem}
+
+  /* Footer stapelt */
+  .foot-grid{grid-template-columns:1fr}
+  .foot-bottom{flex-direction:column;gap:12px}
 }
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
