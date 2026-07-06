@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import LogoMark, { LogoDefs } from "./Logo";
 import { locales, localePath, type Locale } from "@/lib/i18n";
 import type { Dictionary } from "@/lib/dictionaries";
@@ -8,6 +9,7 @@ import type { Dictionary } from "@/lib/dictionaries";
 export default function Nav({ t, locale }: { t: Dictionary; locale: Locale }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -15,6 +17,12 @@ export default function Nav({ t, locale }: { t: Dictionary; locale: Locale }) {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Sluit het menu (en hef daarmee de scroll-lock op) bij elke routewissel —
+  // ook wanneer de taalwissel naar /de of /en navigeert.
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   // Escape sluit het menu + body-scroll locken zolang het open is
   useEffect(() => {
@@ -41,55 +49,70 @@ export default function Nav({ t, locale }: { t: Dictionary; locale: Locale }) {
   const close = () => setOpen(false);
 
   return (
-    <nav className={scrolled ? "scrolled" : ""}>
-      <LogoDefs />
-      <a className="logo" href="#top" aria-label="GUTSKI">
-        <LogoMark />
-        <span className="logo-word">
-          GUT<span>SKI</span>
-        </span>
-      </a>
-      <div className="nav-links">
-        {links.map((l) => (
-          <a key={l.href} href={l.href}>
-            {l.label}
-          </a>
-        ))}
-        <div className="lang" role="group" aria-label="Taal / Sprache / Language">
-          {locales.map((l) => (
-            <Link key={l} href={localePath(l)} className={l === locale ? "on" : ""} prefetch={false}>
-              {l.toUpperCase()}
-            </Link>
-          ))}
-        </div>
-        <a className="btn small" href="https://skipullies.com" target="_blank" rel="noopener">
-          {t.nav_shop} ↗
+    <>
+      <nav className={scrolled ? "scrolled" : ""}>
+        <LogoDefs />
+        <a className="logo" href="#top" aria-label="GUTSKI">
+          <LogoMark />
+          <span className="logo-word">
+            GUT<span>SKI</span>
+          </span>
         </a>
-      </div>
+        <div className="nav-links">
+          {links.map((l) => (
+            <a key={l.href} href={l.href}>
+              {l.label}
+            </a>
+          ))}
+          <div className="lang" role="group" aria-label="Taal / Sprache / Language">
+            {locales.map((l) => (
+              <Link key={l} href={localePath(l)} className={l === locale ? "on" : ""} prefetch={false}>
+                {l.toUpperCase()}
+              </Link>
+            ))}
+          </div>
+          <a className="btn small" href="https://skipullies.com" target="_blank" rel="noopener">
+            {t.nav_shop} ↗
+          </a>
+        </div>
+        {/* Hamburger — alleen zichtbaar ≤768px, opent het paneel */}
+        <button
+          type="button"
+          className="nav-burger"
+          aria-label="Menu openen"
+          aria-expanded={open}
+          aria-controls="mobile-menu"
+          onClick={() => setOpen(true)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+      </nav>
 
-      {/* Hamburger — alleen zichtbaar ≤768px; wordt een X bij openen */}
-      <button
-        type="button"
-        className={`nav-burger${open ? " on" : ""}`}
-        aria-label={open ? "Menu sluiten" : "Menu openen"}
-        aria-expanded={open}
-        aria-controls="mobile-menu"
-        onClick={() => setOpen((v) => !v)}
-      >
-        <span />
-        <span />
-        <span />
-      </button>
-
-      {/* Fullscreen overlay-paneel */}
+      {/* Fullscreen overlay-paneel — sibling van <nav>, boven alles (z-index 2000) */}
       <div id="mobile-menu" className={`mobile-menu${open ? " open" : ""}`} aria-hidden={!open}>
-        <div className="mobile-menu-links">
+        <div className="mobile-menu-bar">
+          <a className="logo" href="#top" aria-label="GUTSKI" onClick={close}>
+            <LogoMark />
+            <span className="logo-word">
+              GUT<span>SKI</span>
+            </span>
+          </a>
+          <button type="button" className="mobile-menu-close" aria-label="Menu sluiten" onClick={close}>
+            <span />
+            <span />
+          </button>
+        </div>
+
+        <nav className="mobile-menu-links" aria-label="Mobiele navigatie">
           {links.map((l) => (
             <a key={l.href} href={l.href} onClick={close}>
               {l.label}
             </a>
           ))}
-        </div>
+        </nav>
+
         <div className="mobile-menu-foot">
           <div className="lang" role="group" aria-label="Taal / Sprache / Language">
             {locales.map((l) => (
@@ -115,6 +138,6 @@ export default function Nav({ t, locale }: { t: Dictionary; locale: Locale }) {
           </a>
         </div>
       </div>
-    </nav>
+    </>
   );
 }
