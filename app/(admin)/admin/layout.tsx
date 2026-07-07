@@ -1,4 +1,5 @@
 import "@/app/globals.css";
+import "./admin.css";
 import { DM_Sans, DM_Mono, Syne } from "next/font/google";
 
 const syne = Syne({ subsets: ["latin"], weight: ["700", "800"], variable: "--font-syne" });

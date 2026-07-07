@@ -2,9 +2,13 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import type { Dealer, StockistLead } from "@/lib/types";
 import { createDealer, updateDealer, toggleDealer, deleteDealer, cycleLeadStatus, signOut } from "./actions";
-import DealerForm from "./DealerForm";
+import LogoMark, { LogoDefs } from "@/components/Logo";
+import AdminTabs from "./AdminTabs";
+import NewDealer from "./NewDealer";
+import DealerCard from "./DealerCard";
+import LeadsPanel from "./LeadsPanel";
 
-export const metadata = { title: "GUTSKI Admin — Verkooppunten", robots: { index: false } };
+export const metadata = { title: "GUTSKI Admin", robots: { index: false } };
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
@@ -22,101 +26,64 @@ export default async function AdminPage() {
   const leads = (leadsData ?? []) as StockistLead[];
   const newLeads = leads.filter((l) => l.status === "new").length;
 
-  const statusColor = (s: StockistLead["status"]) =>
-    s === "new" ? "var(--glacier)" : s === "contacted" ? "#E8A33D" : "var(--powder)";
-  const nextLabel = (s: StockistLead["status"]) =>
-    s === "new" ? "gecontacteerd" : s === "contacted" ? "afgehandeld" : "nieuw";
+  // Datum server-side formatteren (voorkomt hydration-mismatch in de client)
+  const leadRows = leads.map((l) => ({
+    ...l,
+    dateLabel: new Date(l.created_at).toLocaleString("nl-NL", { dateStyle: "medium", timeStyle: "short" }),
+  }));
 
   return (
-    <main style={{ maxWidth: 1100, margin: "0 auto", padding: "48px 20px", fontFamily: "var(--font-dm-sans),sans-serif" }}>
-      <header style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 32 }}>
-        <h1 style={{ fontFamily: "var(--font-syne),sans-serif", textTransform: "uppercase" }}>
-          Verkooppunten <span style={{ color: "var(--glacier)" }}>({dealers.length})</span>
-        </h1>
-        <form action={signOut}><button className="btn ghost small" type="submit">Uitloggen</button></form>
+    <div className="adm">
+      <LogoDefs />
+      <header className="adm-header">
+        <div className="adm-header-in">
+          <span className="adm-brand">
+            <LogoMark />
+            GUTSKI <span>Admin</span>
+          </span>
+          <div className="adm-user">
+            <span className="adm-email" title={user.email ?? ""}>{user.email}</span>
+            <form action={signOut}>
+              <button className="btn ghost small" type="submit">Uitloggen</button>
+            </form>
+          </div>
+        </div>
       </header>
 
-      <details style={{ background: "var(--slope)", border: "1px solid var(--line)", borderRadius: 16, padding: 22, marginBottom: 28 }}>
-        <summary style={{ cursor: "pointer", fontWeight: 700 }}>+ Nieuw verkooppunt</summary>
-        <p style={{ color: "var(--powder)", fontSize: ".82rem", margin: "12px 0 0" }}>
-          Vul naam, adres, postcode, plaats en land in — de coördinaten worden automatisch bepaald bij opslaan.
-        </p>
-        <DealerForm action={createDealer} submitLabel="Toevoegen" />
-      </details>
+      <main className="adm-main">
+        <AdminTabs
+          tabs={[
+            { label: "Verkooppunten", badge: dealers.length },
+            { label: "Aanmeldingen", badge: newLeads },
+          ]}
+        >
+          <div>
+            <h1 className="adm-h1">Verkooppunten <span className="adm-badge">{dealers.length}</span></h1>
+            <NewDealer action={createDealer} />
 
-      <div style={{ display: "grid", gap: 14 }}>
-        {dealers.map((d) => (
-          <details key={d.id} style={{ background: "var(--panel)", border: "1px solid var(--line)", borderRadius: 14, padding: "16px 20px", opacity: d.active ? 1 : 0.55 }}>
-            <summary style={{ cursor: "pointer", display: "flex", gap: 12, alignItems: "baseline", flexWrap: "wrap" }}>
-              <b>{d.name}</b>
-              <span style={{ color: "var(--powder)", fontSize: ".88rem" }}>{d.address}, {d.city}</span>
-              <span className="mono" style={{ fontSize: ".7rem", color: "var(--glacier)" }}>{d.country}</span>
-              {!d.active && <span className="mono" style={{ fontSize: ".7rem", color: "var(--powder)" }}>INACTIEF</span>}
-            </summary>
-
-            <DealerForm action={updateDealer} dealer={d} submitLabel="Opslaan" />
-
-            <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 14 }}>
-              <form action={toggleDealer}>
-                <input type="hidden" name="id" value={d.id} />
-                <input type="hidden" name="active" value={String(d.active)} />
-                <button className="btn ghost small" type="submit">
-                  {d.active ? "Deactiveren" : "Activeren"}
-                </button>
-              </form>
-              <form action={deleteDealer}>
-                <input type="hidden" name="id" value={d.id} />
-                <button className="btn ghost small" type="submit" style={{ borderColor: "#8E2226", color: "#E58" }}>
-                  Verwijderen
-                </button>
-              </form>
-            </div>
-          </details>
-        ))}
-      </div>
-
-      <p style={{ color: "var(--powder)", fontSize: ".82rem", marginTop: 28 }}>
-        Coördinaten worden automatisch uit het adres bepaald (OpenStreetMap). Klopt een pin niet? Open dan de
-        sectie “Coördinaten” en corrigeer ze handmatig.
-      </p>
-
-      <section style={{ marginTop: 56 }}>
-        <h2 style={{ fontFamily: "var(--font-syne),sans-serif", textTransform: "uppercase", fontSize: "1.4rem" }}>
-          Verkooppunt-aanmeldingen <span style={{ color: "var(--glacier)" }}>({newLeads} nieuw)</span>
-        </h2>
-        <p style={{ color: "var(--powder)", fontSize: ".82rem", margin: "6px 0 18px" }}>
-          {leads.length} aanmelding{leads.length === 1 ? "" : "en"} totaal, nieuwste eerst.
-        </p>
-
-        {leads.length === 0 && <p style={{ color: "var(--powder)" }}>Nog geen aanmeldingen.</p>}
-
-        <div style={{ display: "grid", gap: 12 }}>
-          {leads.map((l) => (
-            <div key={l.id} style={{ background: "var(--panel)", border: "1px solid var(--line)", borderRadius: 14, padding: "16px 18px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "baseline", flexWrap: "wrap" }}>
-                <b>{l.company}</b>
-                <span className="mono" style={{ fontSize: ".7rem", color: statusColor(l.status) }}>{l.status.toUpperCase()}</span>
+            {dealers.length === 0 ? (
+              <div className="adm-empty">
+                <b>Nog geen verkooppunten</b>
+                <span>Voeg je eerste verkooppunt toe met de knop hierboven.</span>
               </div>
-              <div style={{ color: "var(--powder)", fontSize: ".88rem", marginTop: 8, display: "grid", gap: 4 }}>
-                <span>
-                  {l.contact_name} · <a href={`mailto:${l.email}`} style={{ color: "var(--glacier)" }}>{l.email}</a>
-                  {l.phone ? ` · ${l.phone}` : ""}
-                </span>
-                <span>{[l.city, l.country].filter(Boolean).join(", ") || "—"}</span>
-                {l.message && <span style={{ whiteSpace: "pre-wrap", color: "var(--ice)" }}>{l.message}</span>}
-                <span className="mono" style={{ fontSize: ".7rem" }}>
-                  {new Date(l.created_at).toLocaleString("nl-NL", { dateStyle: "medium", timeStyle: "short" })}
-                </span>
+            ) : (
+              <div className="adm-list">
+                {dealers.map((d) => (
+                  <DealerCard
+                    key={d.id}
+                    dealer={d}
+                    updateAction={updateDealer}
+                    toggleAction={toggleDealer}
+                    deleteAction={deleteDealer}
+                  />
+                ))}
               </div>
-              <form action={cycleLeadStatus} style={{ marginTop: 12 }}>
-                <input type="hidden" name="id" value={l.id} />
-                <input type="hidden" name="status" value={l.status} />
-                <button className="btn ghost small" type="submit">Markeer als {nextLabel(l.status)}</button>
-              </form>
-            </div>
-          ))}
-        </div>
-      </section>
-    </main>
+            )}
+          </div>
+
+          <LeadsPanel leads={leadRows} cycleAction={cycleLeadStatus} />
+        </AdminTabs>
+      </main>
+    </div>
   );
 }

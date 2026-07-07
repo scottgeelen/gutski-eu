@@ -1,0 +1,110 @@
+/* ===================== ADMIN UI ===================== */
+.adm{min-height:100svh;background:var(--night);color:var(--ice);font-family:var(--font-dm-sans),sans-serif}
+
+/* ---- Header ---- (min-height/display resetten: de globale hero-`header`-regel niet erven) */
+.adm-header{position:sticky;top:0;z-index:20;min-height:0;display:block;overflow:visible;background:rgba(10,19,34,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.adm-header-in{max-width:1100px;margin:0 auto;padding:14px clamp(16px,4vw,24px);display:flex;align-items:center;justify-content:space-between;gap:16px}
+.adm-brand{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-syne),sans-serif;font-weight:800;letter-spacing:.04em;font-size:1.05rem;white-space:nowrap}
+.adm-brand .logo-mark{height:30px;width:25px;color:var(--ice);flex:none}
+.adm-brand span{color:var(--glacier)}
+.adm-user{display:flex;align-items:center;gap:14px;min-width:0}
+.adm-user .adm-email{color:var(--powder);font-size:.85rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:38vw}
+
+/* ---- Main ---- */
+.adm-main{max-width:1100px;margin:0 auto;padding:26px clamp(16px,4vw,24px) 80px}
+/* max-width:none om de globale h1{max-width:15ch} te overschrijven (badge blijft inline) */
+.adm-h1{font-family:var(--font-syne),sans-serif;text-transform:uppercase;font-size:clamp(1.35rem,3vw,1.7rem);line-height:1.15;max-width:none;overflow-wrap:break-word;display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+
+/* ---- Tabs ---- */
+.adm-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:26px;flex-wrap:wrap}
+.adm-tab{background:none;border:0;color:var(--powder);font:inherit;font-weight:600;font-size:.95rem;padding:12px 16px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;display:inline-flex;align-items:center;gap:8px;transition:color .2s,border-color .2s}
+.adm-tab:hover{color:var(--ice)}
+.adm-tab.on{color:var(--ice);border-bottom-color:var(--glacier)}
+
+/* ---- Count badge ---- */
+.adm-badge{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 8px;border-radius:99px;background:var(--panel-2);color:var(--ice);font-family:var(--font-dm-mono),monospace;font-size:.72rem;font-weight:500;line-height:1}
+.adm-tab.on .adm-badge{background:var(--glacier);color:var(--night)}
+
+/* ---- New-dealer ---- */
+.adm-new{margin:2px 0 22px}
+.adm-newpanel{background:var(--slope);border:1px solid var(--line);border-radius:16px;padding:20px clamp(16px,3vw,22px);margin-top:14px}
+.adm-hint{color:var(--powder);font-size:.82rem;margin-bottom:14px}
+
+/* ---- Cards / list ---- */
+.adm-list{display:grid;gap:12px}
+.adm-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;transition:border-color .2s}
+.adm-card.inactive{opacity:.62}
+.adm-drow{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.adm-dname{font-family:var(--font-syne),sans-serif;font-weight:700;font-size:1.05rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:0}
+.adm-daddr{color:var(--powder);font-size:.9rem;margin-top:5px;overflow-wrap:break-word}
+.adm-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.adm-flag{font-size:1.05rem;line-height:1}
+
+/* ---- Status badges ---- */
+.adm-status{font-family:var(--font-dm-mono),monospace;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border-radius:99px;border:1px solid transparent;white-space:nowrap;font-weight:500}
+.adm-status.active,.adm-status.new{background:rgba(95,178,255,.15);color:var(--glacier);border-color:rgba(95,178,255,.32)}
+.adm-status.contacted{background:rgba(232,163,61,.15);color:#E8A33D;border-color:rgba(232,163,61,.32)}
+.adm-status.inactive,.adm-status.done{background:rgba(157,187,218,.1);color:var(--powder);border-color:var(--line)}
+
+/* ---- Empty state ---- */
+.adm-empty{text-align:center;padding:48px 24px;border:1px dashed var(--line);border-radius:16px;color:var(--powder)}
+.adm-empty b{display:block;color:var(--ice);font-family:var(--font-syne),sans-serif;font-size:1.1rem;margin-bottom:6px}
+
+/* ---- Forms ---- */
+.adm-formwrap{margin-top:16px;border-top:1px solid var(--line);padding-top:16px}
+.adm-form{display:grid;gap:16px}
+.adm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.adm-field{display:grid;gap:6px;font-size:.78rem;color:var(--powder)}
+.adm-field .req{color:var(--glacier)}
+.adm-form input,.adm-form select,.adm-form textarea{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;color:var(--ice);padding:11px 13px;font:inherit;font-size:.92rem;width:100%}
+.adm-form input:focus,.adm-form select:focus,.adm-form textarea:focus{border-color:var(--glacier);outline:none}
+.adm-form input[type=checkbox]{width:auto;accent-color:var(--glacier)}
+.adm-check{display:flex;flex-direction:row;align-items:center;gap:8px;color:var(--ice);font-size:.9rem;align-self:end}
+.adm-adv{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.adm-adv summary{cursor:pointer;font-size:.82rem;color:var(--powder)}
+.adm-adv .adm-grid{margin-top:12px;grid-template-columns:1fr 1fr}
+.adm-formrow{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.adm-feedback{display:inline-flex;gap:12px;align-items:center;font-size:.85rem;flex-wrap:wrap}
+.adm-ok{color:var(--glacier)}
+.adm-err{color:#F19}
+.adm-confirm{display:inline-flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:.85rem;color:var(--powder)}
+
+/* ---- Danger buttons ---- */
+.btn.danger{background:transparent;color:#EF6B7A;border:1px solid rgba(180,48,46,.7)}
+.btn.danger:hover{border-color:#C0392B;color:#ff8a95;box-shadow:none;transform:none}
+.btn.solid-danger{background:#B4302E;color:#fff;border:0}
+.btn.solid-danger:hover{background:#C0392B;box-shadow:none}
+
+/* ---- Leads ---- */
+.adm-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.adm-filter{background:var(--panel);border:1px solid var(--line);color:var(--powder);border-radius:99px;padding:7px 14px;font:inherit;font-size:.82rem;cursor:pointer;display:inline-flex;gap:8px;align-items:center;transition:.2s}
+.adm-filter:hover{border-color:var(--glacier);color:var(--ice)}
+.adm-filter.on{background:var(--glacier);border-color:var(--glacier);color:var(--night);font-weight:700}
+.adm-filter.on .adm-badge{background:rgba(10,19,34,.25);color:var(--night)}
+.adm-lead-top{display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap}
+.adm-lead-meta{color:var(--powder);font-size:.88rem;margin-top:8px;display:grid;gap:5px}
+.adm-lead-meta a{color:var(--glacier);font-weight:600}
+.adm-msg{color:var(--ice);font-size:.9rem;white-space:pre-wrap;background:var(--panel-2);border-radius:10px;padding:10px 13px;margin-top:10px;overflow-wrap:break-word}
+.adm-more{background:none;border:0;color:var(--glacier);font:inherit;font-size:.82rem;font-weight:600;cursor:pointer;padding:0;margin-top:8px}
+
+/* ---- Login ---- */
+.adm-login{min-height:100svh;display:grid;place-items:center;padding:20px;background:radial-gradient(120% 80% at 50% 0%,rgba(95,178,255,.08),transparent 60%),var(--night);color:var(--ice)}
+.adm-login-card{width:min(400px,100%);background:var(--slope);border:1px solid var(--line);border-radius:18px;padding:34px clamp(22px,5vw,32px);display:grid;gap:16px;box-shadow:0 24px 60px rgba(0,0,0,.4)}
+.adm-login-brand{display:inline-flex;align-items:center;gap:10px;justify-content:center}
+.adm-login-brand .logo-mark{height:34px;width:28px;color:var(--ice)}
+.adm-login-card h1{text-align:center;max-width:none;font-family:var(--font-syne),sans-serif;font-size:1.35rem;text-transform:uppercase;letter-spacing:.02em}
+.adm-login-card h1 span{color:var(--glacier)}
+.adm-login-card p.sub{text-align:center;color:var(--powder);font-size:.85rem;margin-top:-6px}
+.adm-login-card input{background:var(--panel);border:1px solid var(--line);border-radius:12px;color:var(--ice);padding:13px 16px;font:inherit;width:100%}
+.adm-login-card input:focus{border-color:var(--glacier);outline:none}
+.adm-login-card .btn{margin-top:4px}
+
+/* ---- Responsive ---- */
+@media(max-width:560px){
+  .adm-drow{flex-direction:column}
+  .adm-actions{width:100%}
+  .adm-adv .adm-grid{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .adm-user .adm-email{display:none}
+}
