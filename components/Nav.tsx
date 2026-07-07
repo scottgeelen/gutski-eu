@@ -43,8 +43,6 @@ export default function Nav({ t, locale }: { t: Dictionary; locale: Locale }) {
 
   const links = [
     { href: "#merk", label: t.nav_brand },
-    { href: "#collectie", label: t.nav_coll },
-    { href: "#configurator", label: t.nav_conf },
     { href: "#winkels", label: t.nav_stores },
   ];
 

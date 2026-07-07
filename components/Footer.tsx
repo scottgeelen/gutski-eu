@@ -20,8 +20,6 @@ export default function Footer({ t }: { t: Dictionary }) {
           <div>
             <h3>{t.foot_menu}</h3>
             <a href="#merk">{t.nav_brand}</a>
-            <a href="#collectie">{t.nav_coll}</a>
-            <a href="#configurator">{t.nav_conf}</a>
             <a href="#winkels">{t.nav_stores}</a>
           </div>
           <div>

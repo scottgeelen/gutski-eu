@@ -8,8 +8,6 @@ import Hero from "@/components/Hero";
 import Marquee from "@/components/Marquee";
 import Story from "@/components/Story";
 import Shoot from "@/components/Shoot";
-import Collection from "@/components/Collection";
-import ConfiguratorTeaser from "@/components/ConfiguratorTeaser";
 import Locator from "@/components/Locator";
 import Groups from "@/components/Groups";
 import CtaBanner from "@/components/CtaBanner";
@@ -43,8 +41,6 @@ export default async function Page({
       <Marquee items={t.marquee} />
       <Story t={t} />
       <Shoot t={t} />
-      <Collection t={t} />
-      <ConfiguratorTeaser t={t} />
       <Locator t={t} dealers={dealers} />
       <Groups t={t} />
       <CtaBanner t={t} />
