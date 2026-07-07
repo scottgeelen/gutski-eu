@@ -2,34 +2,10 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import type { Dealer } from "@/lib/types";
 import { createDealer, updateDealer, toggleDealer, deleteDealer, signOut } from "./actions";
+import DealerForm from "./DealerForm";
 
 export const metadata = { title: "GUTSKI Admin — Verkooppunten", robots: { index: false } };
 export const dynamic = "force-dynamic";
-
-const input = {
-  background: "var(--panel)", border: "1px solid var(--line)", borderRadius: 10,
-  color: "var(--ice)", padding: "10px 12px", font: "inherit", fontSize: ".9rem", width: "100%",
-} as const;
-const label = { display: "grid", gap: 6, fontSize: ".78rem", color: "var(--powder)" } as const;
-
-function DealerFields({ d }: { d?: Dealer }) {
-  return (
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))", gap: 12 }}>
-      <label style={label}>Naam<input style={input} name="name" defaultValue={d?.name} required /></label>
-      <label style={label}>Adres<input style={input} name="address" defaultValue={d?.address} required /></label>
-      <label style={label}>Plaats<input style={input} name="city" defaultValue={d?.city} required /></label>
-      <label style={label}>Postcode<input style={input} name="postal_code" defaultValue={d?.postal_code ?? ""} /></label>
-      <label style={label}>Land (ISO-2)<input style={input} name="country" defaultValue={d?.country ?? "NL"} maxLength={2} required /></label>
-      <label style={label}>Latitude<input style={input} name="lat" type="number" step="any" defaultValue={d?.lat} required /></label>
-      <label style={label}>Longitude<input style={input} name="lng" type="number" step="any" defaultValue={d?.lng} required /></label>
-      <label style={label}>Telefoon<input style={input} name="phone" defaultValue={d?.phone ?? ""} /></label>
-      <label style={label}>Website<input style={input} name="website" defaultValue={d?.website ?? ""} /></label>
-      <label style={{ ...label, alignSelf: "end", flexDirection: "row" as const }}>
-        <span><input name="active" type="checkbox" defaultChecked={d ? d.active : true} /> Actief</span>
-      </label>
-    </div>
-  );
-}
 
 export default async function AdminPage() {
   const supabase = await createClient();
@@ -50,10 +26,10 @@ export default async function AdminPage() {
 
       <details style={{ background: "var(--slope)", border: "1px solid var(--line)", borderRadius: 16, padding: 22, marginBottom: 28 }}>
         <summary style={{ cursor: "pointer", fontWeight: 700 }}>+ Nieuw verkooppunt</summary>
-        <form action={createDealer} style={{ marginTop: 18, display: "grid", gap: 16 }}>
-          <DealerFields />
-          <button className="btn" type="submit" style={{ justifySelf: "start" }}>Toevoegen</button>
-        </form>
+        <p style={{ color: "var(--powder)", fontSize: ".82rem", margin: "12px 0 0" }}>
+          Vul naam, adres, postcode, plaats en land in — de coördinaten worden automatisch bepaald bij opslaan.
+        </p>
+        <DealerForm action={createDealer} submitLabel="Toevoegen" />
       </details>
 
       <div style={{ display: "grid", gap: 14 }}>
@@ -65,24 +41,31 @@ export default async function AdminPage() {
               <span className="mono" style={{ fontSize: ".7rem", color: "var(--glacier)" }}>{d.country}</span>
               {!d.active && <span className="mono" style={{ fontSize: ".7rem", color: "var(--powder)" }}>INACTIEF</span>}
             </summary>
-            <form action={updateDealer} style={{ marginTop: 16, display: "grid", gap: 16 }}>
-              <input type="hidden" name="id" value={d.id} />
-              <DealerFields d={d} />
-              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                <button className="btn small" type="submit">Opslaan</button>
-                <button className="btn ghost small" formAction={toggleDealer} name="active" value={String(d.active)}>
+
+            <DealerForm action={updateDealer} dealer={d} submitLabel="Opslaan" />
+
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 14 }}>
+              <form action={toggleDealer}>
+                <input type="hidden" name="id" value={d.id} />
+                <input type="hidden" name="active" value={String(d.active)} />
+                <button className="btn ghost small" type="submit">
                   {d.active ? "Deactiveren" : "Activeren"}
                 </button>
-                <button className="btn ghost small" formAction={deleteDealer} style={{ borderColor: "#8E2226", color: "#E58" }}>
+              </form>
+              <form action={deleteDealer}>
+                <input type="hidden" name="id" value={d.id} />
+                <button className="btn ghost small" type="submit" style={{ borderColor: "#8E2226", color: "#E58" }}>
                   Verwijderen
                 </button>
-              </div>
-            </form>
+              </form>
+            </div>
           </details>
         ))}
       </div>
+
       <p style={{ color: "var(--powder)", fontSize: ".82rem", marginTop: 28 }}>
-        Tip: lat/lng vind je door in Google Maps rechts te klikken op de winkellocatie — de coördinaten staan bovenaan het menu.
+        Coördinaten worden automatisch uit het adres bepaald (OpenStreetMap). Klopt een pin niet? Open dan de
+        sectie “Coördinaten” en corrigeer ze handmatig.
       </p>
     </main>
   );
