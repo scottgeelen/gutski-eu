@@ -133,14 +133,17 @@ header.has-photo .peaks{opacity:.3}
 .hero-eyebrow{display:inline-flex;align-items:center;gap:10px;margin-bottom:26px}
 .hero-eyebrow::before{content:"";width:34px;height:2px;background:var(--glacier)}
 h1{
-  font-size:clamp(2.6rem,8vw,6.2rem);
+  font-size:clamp(2.6rem,6vw,5rem);
   font-weight:800;text-transform:uppercase;
-  max-width:13ch;
+  max-width:15ch;overflow-wrap:break-word;hyphens:manual;
 }
-h1 em{font-style:normal;color:var(--glacier);position:relative;white-space:nowrap}
-h1 em::after{
-  content:"";position:absolute;left:0;right:0;bottom:.04em;height:.14em;
-  background:var(--glacier);opacity:.25;border-radius:99px;
+/* De blauwe regel mag op elk formaat afbreken i.p.v. buiten beeld te lopen.
+   Onderstreping via achtergrond-gradient: volgt de tekst per regel en steekt
+   nooit buiten de tekst uit (geen absolute ::after die overloopt). */
+h1 em{
+  font-style:normal;color:var(--glacier);
+  white-space:normal;overflow-wrap:break-word;
+  background:linear-gradient(rgba(95,178,255,.25),rgba(95,178,255,.25)) 0 100%/100% .12em no-repeat;
 }
 .hero-sub{max-width:52ch;color:var(--powder);font-size:1.12rem;margin:26px 0 38px}
 .hero-cta{display:flex;gap:16px;flex-wrap:wrap}
@@ -454,9 +457,6 @@ footer::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;back
   .dots button{min-width:44px;width:44px;height:44px}
   .lang a,.lang button{min-height:44px;display:inline-flex;align-items:center}
   .btn.small{min-height:44px;padding:11px 20px}
-
-  /* Hero-titel mag afbreken (voorkomt horizontale overflow) */
-  h1 em{white-space:normal}
 
   /* Consistent verticaal ritme: gelijke sectie-padding + compactere sec-head */
   :root{--cut:clamp(20px,4vw,40px)}
