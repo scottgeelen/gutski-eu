@@ -1,5 +1,6 @@
 import LogoMark from "./Logo";
 import StockistTrigger from "./StockistTrigger";
+import { SOCIALS } from "@/lib/seo";
 import type { Dictionary } from "@/lib/dictionaries";
 
 export default function Footer({ t }: { t: Dictionary }) {
@@ -30,9 +31,9 @@ export default function Footer({ t }: { t: Dictionary }) {
           </div>
           <div>
             <h3>{t.foot_follow}</h3>
-            <a href="#" rel="noopener">Instagram</a>
-            <a href="#" rel="noopener">TikTok</a>
-            <a href="#" rel="noopener">Facebook</a>
+            <a href={SOCIALS.instagram} target="_blank" rel="noopener">Instagram</a>
+            <a href={SOCIALS.tiktok} target="_blank" rel="noopener">TikTok</a>
+            <a href={SOCIALS.facebook} target="_blank" rel="noopener">Facebook</a>
           </div>
         </div>
         <div className="foot-bottom">

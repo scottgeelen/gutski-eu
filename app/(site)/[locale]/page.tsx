@@ -13,6 +13,8 @@ import Groups from "@/components/Groups";
 import CtaBanner from "@/components/CtaBanner";
 import Footer from "@/components/Footer";
 import StockistModal from "@/components/StockistModal";
+import JsonLd from "@/components/JsonLd";
+import { organizationSchema, storesSchema } from "@/lib/seo";
 
 export const revalidate = 300; // dealers max 5 min oud
 
@@ -36,6 +38,8 @@ export default async function Page({
 
   return (
     <>
+      <JsonLd data={organizationSchema(t.meta_desc)} />
+      {dealers.length > 0 && <JsonLd data={storesSchema(dealers)} />}
       <Nav t={t} locale={locale as Locale} />
       <Hero t={t} />
       <Marquee items={t.marquee} />

@@ -12,6 +12,10 @@ const dmMono = DM_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gutski.eu";
 
+const OG_LOCALE: Record<Locale, string> = { nl: "nl_NL", de: "de_DE", en: "en_GB" };
+
+export const viewport = { themeColor: "#0A1322" };
+
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
@@ -40,9 +44,16 @@ export async function generateMetadata(
       description: t.meta_desc,
       url: localePath(locale),
       siteName: "GUTSKI",
-      images: ["/images/og.jpg"],
-      locale,
+      images: [{ url: "/images/og.jpg", width: 1200, height: 630, alt: t.meta_title }],
+      locale: OG_LOCALE[locale],
+      alternateLocale: locales.filter((l) => l !== locale).map((l) => OG_LOCALE[l]),
       type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t.meta_title,
+      description: t.meta_desc,
+      images: ["/images/og.jpg"],
     },
   };
 }
