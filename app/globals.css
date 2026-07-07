@@ -10,9 +10,15 @@
   --line:rgba(157,187,218,.16);
   --radius:18px;
   --cut:clamp(28px,5vw,72px);
+  --nav-h:72px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth;overflow-x:clip}
+html{scroll-behavior:smooth;overflow-x:clip;-webkit-tap-highlight-color:transparent;scrollbar-color:var(--panel-2) var(--night)}
+/* Huisstijl-scrollbar (WebKit) */
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:var(--night)}
+::-webkit-scrollbar-thumb{background:var(--panel-2);border-radius:99px;border:2px solid var(--night)}
+::-webkit-scrollbar-thumb:hover{background:#22406B}
 body{
   background:var(--night);
   color:var(--ice);
@@ -22,7 +28,7 @@ body{
   overflow-x:clip;
 }
 ::selection{background:var(--glacier);color:var(--night)}
-h1,h2,h3{font-family:var(--font-syne),sans-serif;line-height:1.05;letter-spacing:-.01em}
+h1,h2,h3{font-family:var(--font-syne),sans-serif;line-height:1.1;letter-spacing:-.01em}
 /* Lange (samengestelde) woorden mogen nooit buiten hun container vallen */
 h1,h2,h3,.card-body h3{overflow-wrap:break-word;hyphens:auto}
 p{overflow-wrap:break-word}
@@ -61,6 +67,8 @@ nav .logo-mark{height:38px;width:31px}
 .btn.ghost{background:transparent;color:var(--ice);border:1px solid var(--line)}
 .btn.ghost:hover{border-color:var(--glacier);box-shadow:none;color:var(--glacier)}
 .btn.small{padding:9px 18px;font-size:.85rem}
+.btn:active{transform:scale(.98)}
+.dots button:active,.chips button:active,.dealer:active{transform:scale(.98)}
 :focus-visible{outline:2px solid var(--glacier);outline-offset:3px;border-radius:4px}
 
 /* ---------- MOBIEL MENU ---------- */
@@ -125,7 +133,7 @@ header.has-photo .peaks{opacity:.3}
 .hero-eyebrow{display:inline-flex;align-items:center;gap:10px;margin-bottom:26px}
 .hero-eyebrow::before{content:"";width:34px;height:2px;background:var(--glacier)}
 h1{
-  font-size:clamp(2.9rem,8vw,6.2rem);
+  font-size:clamp(2.6rem,8vw,6.2rem);
   font-weight:800;text-transform:uppercase;
   max-width:13ch;
 }
@@ -139,6 +147,14 @@ h1 em::after{
 .hero-meta{display:flex;gap:34px;margin-top:64px;flex-wrap:wrap}
 .hero-meta div strong{font-family:var(--font-syne),sans-serif;font-size:1.5rem;display:block}
 .hero-meta div span{color:var(--powder);font-size:.85rem}
+/* Hero-entrance: gestaffeld infaden bij eerste load (80ms-stappen) */
+@keyframes heroIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.hero-inner>*{animation:heroIn .7s cubic-bezier(.22,.61,.36,1) both}
+.hero-inner .hero-eyebrow{animation-delay:.05s}
+.hero-inner h1{animation-delay:.13s}
+.hero-inner .hero-sub{animation-delay:.21s}
+.hero-inner .hero-cta{animation-delay:.29s}
+.hero-inner .hero-meta{animation-delay:.37s}
 
 /* ---------- MARQUEE ---------- */
 /* Wrapper klemt de geroteerde/geschaalde balk af zodat hij de viewport niet verbreedt */
@@ -155,6 +171,8 @@ h1 em::after{
 @keyframes slide{to{transform:translateX(-50%)}}
 
 /* ---------- SECTIONS ---------- */
+/* Anchors niet achter de fixed nav laten verdwijnen (desktop + mobiel) */
+section[id],header[id]{scroll-margin-top:calc(var(--nav-h) + 16px)}
 section{position:relative;padding:clamp(80px,11vw,140px) 0}
 .slope-cut{
   background:var(--slope);
@@ -163,8 +181,12 @@ section{position:relative;padding:clamp(80px,11vw,140px) 0}
   padding-bottom:calc(clamp(80px,11vw,140px) + var(--cut));
 }
 .sec-head{max-width:660px;margin-bottom:56px}
-.sec-head h2{font-size:clamp(1.9rem,4.4vw,3.1rem);text-transform:uppercase;margin:14px 0 18px}
+.sec-head h2{font-size:clamp(1.7rem,4.4vw,3.1rem);text-transform:uppercase;margin:14px 0 18px}
 .sec-head p{color:var(--powder)}
+/* Subtiel radiaal accent op de vlakke navy-secties (geen slope-cut) */
+#merk{background:radial-gradient(70% 55% at 12% 0%,rgba(95,178,255,.06),transparent 60%)}
+#configurator{background:radial-gradient(65% 55% at 88% 8%,rgba(95,178,255,.06),transparent 60%)}
+#groepen{background:radial-gradient(70% 60% at 50% 0%,rgba(95,178,255,.05),transparent 62%)}
 
 /* reveal */
 .rv{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
@@ -187,6 +209,8 @@ section{position:relative;padding:clamp(80px,11vw,140px) 0}
 }
 .story-visual img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .9s}
 .story-visual img.ld{opacity:1}
+/* Parallax-laag: iets ingezoomd zodat de ±20px translate geen rand toont */
+.parallax-fill{position:absolute;inset:0;transform:scale(1.1);will-change:transform}
 .story-visual::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(8,16,32,.72))}
 .story-visual .tag{
   position:absolute;bottom:22px;left:22px;right:22px;z-index:2;
@@ -207,7 +231,7 @@ section{position:relative;padding:clamp(80px,11vw,140px) 0}
 .strip img.ld{opacity:1}
 .strip figure:hover img{transform:scale(1.05)}
 .strip figcaption{position:absolute;bottom:14px;left:16px;font-family:var(--font-dm-mono),monospace;font-size:.68rem;letter-spacing:.14em;color:var(--ice);text-shadow:0 1px 8px rgba(8,16,32,.8)}
-.story-copy h2{font-size:clamp(1.9rem,4vw,2.8rem);text-transform:uppercase;margin:14px 0 20px}
+.story-copy h2{font-size:clamp(1.7rem,4vw,2.8rem);text-transform:uppercase;margin:14px 0 20px}
 .story-copy p{color:var(--powder);margin-bottom:18px}
 .story-points{display:grid;gap:14px;margin-top:28px}
 .story-points div{display:flex;gap:14px;align-items:flex-start}
@@ -243,8 +267,24 @@ section{position:relative;padding:clamp(80px,11vw,140px) 0}
 .card-body h3{font-size:1.08rem;margin-bottom:6px}
 .card-body .row{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
 .price{font-family:var(--font-dm-mono),monospace;font-size:.95rem}
-.card a.buy{color:var(--glacier);font-weight:700;font-size:.88rem;display:inline-flex;gap:6px;align-items:center}
-.card a.buy:hover{text-decoration:underline}
+.buy-hint{color:var(--glacier);font-weight:700;font-size:.88rem;display:inline-flex;gap:6px;align-items:center;transition:opacity .2s}
+/* Full-width koopknop: op hover van onderen infaden, op touch altijd zichtbaar */
+.card-buy{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-top:14px;padding:11px 18px;border-radius:12px;
+  background:var(--glacier);color:var(--night);font-weight:700;font-size:.88rem;
+  transition:opacity .3s ease,transform .3s ease,box-shadow .2s;
+}
+.card-buy:hover{box-shadow:0 8px 22px rgba(95,178,255,.32)}
+.card-buy:active{transform:scale(.98)}
+@media(hover:hover){
+  .card-buy{opacity:0;transform:translateY(10px);pointer-events:none}
+  .card:hover .card-buy,.card:focus-within .card-buy{opacity:1;transform:none;pointer-events:auto}
+  .card:hover .buy-hint{opacity:0}
+}
+@media(hover:none){
+  .buy-hint{display:none}
+}
 .coll-foot{margin-top:44px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
 .coll-foot p{color:var(--powder);font-size:.95rem}
 
@@ -362,19 +402,33 @@ section{position:relative;padding:clamp(80px,11vw,140px) 0}
   content:"GUTSKI";position:absolute;right:-30px;bottom:-46px;
   font-family:var(--font-syne),sans-serif;font-weight:800;font-size:11rem;opacity:.09;letter-spacing:.02em;
 }
-.cta-banner h2{font-size:clamp(1.8rem,3.6vw,2.7rem);text-transform:uppercase}
+.cta-banner h2{font-size:clamp(1.7rem,3.6vw,2.7rem);text-transform:uppercase}
 .cta-banner p{margin-top:14px;font-weight:500;opacity:.85}
 .cta-banner .btn{background:var(--night);color:var(--ice);justify-self:start}
 .cta-banner .btn:hover{box-shadow:0 10px 30px rgba(10,19,34,.4)}
 
 /* ---------- FOOTER ---------- */
-footer{border-top:1px solid var(--line);padding:70px 0 40px;background:#081020}
+footer{position:relative;padding:70px 0 40px;background:#081020}
+/* Dunne glow-lijn bovenaan (ice → transparant) */
+footer::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(234,242,252,.55),transparent)}
 .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:44px;margin-bottom:54px}
-.foot-grid h4{font-family:var(--font-dm-mono),monospace;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--powder);margin-bottom:18px}
+.foot-grid h3{font-family:var(--font-dm-mono),monospace;font-size:.75rem;font-weight:400;line-height:1.4;letter-spacing:.16em;text-transform:uppercase;color:var(--powder);margin-bottom:26px}
 .foot-grid a{display:block;color:var(--powder);font-size:.92rem;margin-bottom:10px;transition:color .2s}
 .foot-grid a:hover{color:var(--glacier)}
 .foot-grid p{color:var(--powder);font-size:.92rem;max-width:34ch}
 .foot-bottom{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:28px;color:var(--powder);font-size:.82rem}
+
+/* ---------- 404 ---------- */
+.notfound{
+  min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;gap:6px;padding:40px 24px;
+  background:radial-gradient(120% 80% at 50% 0%,rgba(95,178,255,.10),transparent 60%),var(--night);
+}
+.notfound .mono{margin-bottom:10px}
+.notfound h1{font-size:clamp(5rem,26vw,13rem);line-height:.9;color:var(--ice);max-width:none}
+.notfound h1::after{content:".";color:var(--glacier)}
+.notfound p{color:var(--powder);font-size:1.1rem}
+.notfound .btn{margin-top:22px}
 
 /* ---------- RESPONSIVE ---------- */
 @media(max-width:1020px){
@@ -397,7 +451,6 @@ footer{border-top:1px solid var(--line);padding:70px 0 40px;background:#081020}
 
   /* Tap-targets minimaal 44px */
   .chips button,.dots button{min-height:44px}
-  .chips button{min-width:44px}
   .dots button{min-width:44px;width:44px;height:44px}
   .lang a,.lang button{min-height:44px;display:inline-flex;align-items:center}
   .btn.small{min-height:44px;padding:11px 20px}
@@ -405,24 +458,28 @@ footer{border-top:1px solid var(--line);padding:70px 0 40px;background:#081020}
   /* Hero-titel mag afbreken (voorkomt horizontale overflow) */
   h1 em{white-space:normal}
 
-  /* Landenfilter mag over meerdere regels i.p.v. buiten beeld te duwen */
-  .chips{flex-wrap:wrap}
-  /* Grid-cellen mogen niet opblazen door brede inhoud */
-  .locator-shell>*{min-width:0}
-
-  /* Compactere secties */
+  /* Consistent verticaal ritme: gelijke sectie-padding + compactere sec-head */
   :root{--cut:clamp(20px,4vw,40px)}
-  section{padding:clamp(64px,9vw,110px) 0}
+  section{padding:72px 0}
+  .slope-cut{padding-top:calc(72px + var(--cut));padding-bottom:calc(72px + var(--cut))}
+  .sec-head{margin-bottom:32px}
   .marquee-track span{font-size:.9rem}
 
   /* CTA-banner laten passen */
   .cta-banner{padding:clamp(32px,7vw,44px)}
   .cta-banner::after{font-size:5rem;right:-16px;bottom:-28px}
 
-  /* Filmstrip + kaart */
-  .strip figure{width:min(320px,82vw)}
-  #map{min-height:420px}
-  .map-shell{min-height:420px}
+  /* Filmstrip: volgende foto half zichtbaar (peek), uitgelijnd met sectiemarge */
+  .strip{scroll-padding-left:4vw}
+  .strip figure{width:min(300px,78vw);scroll-snap-align:start}
+
+  /* Store locator: chips horizontaal scrollbaar (geen wrap), lijst + kaart compacter */
+  .locator-shell>*{min-width:0}
+  .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .chips::-webkit-scrollbar{display:none}
+  .chips button{flex:none}
+  .loc-list{max-height:300px}
+  #map,.map-shell{min-height:400px}
 }
 @media(max-width:640px){
   .grid-cards{grid-template-columns:1fr}
@@ -430,6 +487,10 @@ footer{border-top:1px solid var(--line);padding:70px 0 40px;background:#081020}
   .hero-meta{gap:22px}
 }
 @media(max-width:480px){
+  /* Body-tekst en hero-sub op ~1rem voor duidelijke hiërarchie */
+  body{font-size:16px}
+  .hero-sub{font-size:1rem;margin:22px 0 32px}
+
   /* Hero-CTA knoppen full-width onder elkaar */
   .hero-cta{flex-direction:column;align-items:stretch}
   .hero-cta .btn{width:100%;justify-content:center}

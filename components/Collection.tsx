@@ -19,8 +19,8 @@ export default function Collection({ t }: { t: Dictionary }) {
           <p>{t.coll_sub}</p>
         </Reveal>
         <div className="grid-cards">
-          {PRODUCTS.map((p) => (
-            <Reveal as="article" className="card" key={p.sku}>
+          {PRODUCTS.map((p, i) => (
+            <Reveal as="article" className="card" key={p.sku} delay={i * 60}>
               <div
                 className="swatch"
                 style={{
@@ -37,10 +37,17 @@ export default function Collection({ t }: { t: Dictionary }) {
                 <h3>{p.name}</h3>
                 <div className="row">
                   <span className="price">{p.price}</span>
-                  <a className="buy" href="https://skipullies.com" target="_blank" rel="noopener">
-                    {t.buy} ↗
-                  </a>
+                  <span className="buy-hint">{t.buy} ↗</span>
                 </div>
+                <a
+                  className="card-buy"
+                  href="https://skipullies.com"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label={`${p.name} — ${t.buy}`}
+                >
+                  {t.buy} ↗
+                </a>
               </div>
             </Reveal>
           ))}

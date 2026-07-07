@@ -58,7 +58,7 @@ export default function ConfiguratorTeaser({ t }: { t: Dictionary }) {
         </Reveal>
         <Reveal className="config-copy">
           <span className="mono">{t.conf_eyebrow}</span>
-          <h2 style={{ fontSize: "clamp(1.9rem,4vw,2.8rem)", textTransform: "uppercase", margin: "14px 0 18px" }}>
+          <h2 style={{ fontSize: "clamp(1.7rem,4vw,2.8rem)", textTransform: "uppercase", margin: "14px 0 18px" }}>
             {t.conf_title}
           </h2>
           <p style={{ color: "var(--powder)" }}>{t.conf_sub}</p>

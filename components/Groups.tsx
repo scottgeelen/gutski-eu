@@ -23,7 +23,7 @@ export default function Groups({ t }: { t: Dictionary }) {
         </Reveal>
         <div className="groups">
           {cards.map(([title, sub], i) => (
-            <Reveal className="group-card" key={title}>
+            <Reveal className="group-card" key={title} delay={i * 60}>
               <div className="ic">{ICONS[i]}</div>
               <h3>{title}</h3>
               <p>{sub}</p>

@@ -14,7 +14,9 @@ export default function Snow() {
     };
     size();
     window.addEventListener("resize", size);
-    const N = Math.min(140, Math.floor(window.innerWidth / 10));
+    // Op mobiel het aantal vlokken halveren (performance)
+    const isMobile = window.innerWidth <= 768;
+    const N = Math.floor(Math.min(140, window.innerWidth / 10) * (isMobile ? 0.5 : 1));
     const flakes = Array.from({ length: N }, () => ({
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,

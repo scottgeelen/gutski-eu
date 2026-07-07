@@ -17,20 +17,20 @@ export default function Footer({ t }: { t: Dictionary }) {
             </p>
           </div>
           <div>
-            <h4>{t.foot_menu}</h4>
+            <h3>{t.foot_menu}</h3>
             <a href="#merk">{t.nav_brand}</a>
             <a href="#collectie">{t.nav_coll}</a>
             <a href="#configurator">{t.nav_conf}</a>
             <a href="#winkels">{t.nav_stores}</a>
           </div>
           <div>
-            <h4>Shop</h4>
+            <h3>Shop</h3>
             <a href="https://skipullies.com" target="_blank" rel="noopener">skipullies.com ↗</a>
             <a href="mailto:b2b@gutski.eu">{t.foot_b2b}</a>
             <a href="mailto:info@gutski.eu">info@gutski.eu</a>
           </div>
           <div>
-            <h4>{t.foot_follow}</h4>
+            <h3>{t.foot_follow}</h3>
             <a href="#" rel="noopener">Instagram</a>
             <a href="#" rel="noopener">TikTok</a>
             <a href="#" rel="noopener">Facebook</a>

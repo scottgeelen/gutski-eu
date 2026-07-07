@@ -18,10 +18,10 @@ export default function Hero({ t }: { t: Dictionary }) {
 
   return (
     <header id="top" className="has-photo">
-      <div className="hero-photo" aria-hidden="true">
+      <div className="hero-photo">
         <Image
           src="/images/hero.jpg"
-          alt=""
+          alt="Skiër in een GUTSKI skipully op de besneeuwde piste in Livigno tijdens de FW26/27-campagne"
           fill
           priority
           sizes="100vw"

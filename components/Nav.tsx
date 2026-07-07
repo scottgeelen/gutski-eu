@@ -6,6 +6,8 @@ import LogoMark, { LogoDefs } from "./Logo";
 import { locales, localePath, type Locale } from "@/lib/i18n";
 import type { Dictionary } from "@/lib/dictionaries";
 
+const LANG_NAMES: Record<Locale, string> = { nl: "Nederlands", de: "Deutsch", en: "English" };
+
 export default function Nav({ t, locale }: { t: Dictionary; locale: Locale }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -66,7 +68,16 @@ export default function Nav({ t, locale }: { t: Dictionary; locale: Locale }) {
           ))}
           <div className="lang" role="group" aria-label="Taal / Sprache / Language">
             {locales.map((l) => (
-              <Link key={l} href={localePath(l)} className={l === locale ? "on" : ""} prefetch={false}>
+              <Link
+                key={l}
+                href={localePath(l)}
+                className={l === locale ? "on" : ""}
+                prefetch={false}
+                hrefLang={l}
+                title={LANG_NAMES[l]}
+                aria-label={LANG_NAMES[l]}
+                aria-current={l === locale ? "true" : undefined}
+              >
                 {l.toUpperCase()}
               </Link>
             ))}
@@ -121,6 +132,10 @@ export default function Nav({ t, locale }: { t: Dictionary; locale: Locale }) {
                 href={localePath(l)}
                 className={l === locale ? "on" : ""}
                 prefetch={false}
+                hrefLang={l}
+                title={LANG_NAMES[l]}
+                aria-label={LANG_NAMES[l]}
+                aria-current={l === locale ? "true" : undefined}
                 onClick={close}
               >
                 {l.toUpperCase()}

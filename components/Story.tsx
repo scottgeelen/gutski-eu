@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Reveal from "./Reveal";
+import ParallaxImage from "./ParallaxImage";
 import type { Dictionary } from "@/lib/dictionaries";
 
 export default function Story({ t }: { t: Dictionary }) {
@@ -7,13 +7,10 @@ export default function Story({ t }: { t: Dictionary }) {
     <section id="merk">
       <div className="wrap story">
         <Reveal className="story-visual">
-          <Image
+          <ParallaxImage
             src="/images/story.jpg"
-            alt="Gutski skipully — campagne Livigno"
-            fill
+            alt="Model in een donkergroene GUTSKI skipully tijdens de FW26/27-fotoshoot in de bergen bij Livigno"
             sizes="(max-width: 1020px) 92vw, 560px"
-            style={{ objectFit: "cover" }}
-            className="ld"
           />
           <div className="tag">
             <span className="mono">{t.story_tag_label}</span>
