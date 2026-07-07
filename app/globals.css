@@ -226,13 +226,21 @@ section{position:relative;padding:clamp(80px,11vw,140px) 0}
 .tagline{font-family:var(--font-syne),sans-serif;font-weight:700;font-size:1.15rem;color:var(--ice);border-left:3px solid var(--glacier);padding-left:18px;margin-top:26px}
 
 /* ---------- FILMSTRIP ---------- */
-.strip{display:flex;gap:16px;overflow-x:auto;padding:6px max(4vw,calc((100vw - 1180px)/2)) 26px;scroll-snap-type:x mandatory;scrollbar-width:thin}
+/* Auto-scroll gebeurt via scrollLeft (JS), zodat handmatig swipen/slepen
+   altijd blijft werken. Geen scroll-snap: dat zou tegen de drift vechten. */
+.strip{display:flex;gap:16px;overflow-x:auto;padding:6px max(4vw,calc((100vw - 1180px)/2)) 26px;scrollbar-width:thin;cursor:grab;user-select:none;-webkit-overflow-scrolling:touch}
+.strip.dragging{cursor:grabbing}
 .strip::-webkit-scrollbar{height:6px}
 .strip::-webkit-scrollbar-thumb{background:var(--panel-2);border-radius:99px}
-.strip figure{flex:0 0 auto;width:min(400px,74vw);aspect-ratio:3/4;border-radius:var(--radius);overflow:hidden;scroll-snap-align:center;border:1px solid var(--line);background:var(--panel);position:relative}
-.strip img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease;opacity:0}
+.strip figure{flex:0 0 auto;width:min(400px,74vw);aspect-ratio:3/4;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);background:var(--panel);position:relative}
+.strip img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease;opacity:0;-webkit-user-drag:none;user-select:none}
 .strip img.ld{opacity:1}
 .strip figure:hover img{transform:scale(1.05)}
+/* Staggered reveal — alleen als beweging is toegestaan (respecteert reduced-motion) */
+@media(prefers-reduced-motion:no-preference){
+  .strip figure{opacity:0;transform:scale(.95);transition:opacity .6s ease,transform .6s ease;will-change:opacity,transform}
+  .strip.in figure{opacity:1;transform:none}
+}
 .strip figcaption{position:absolute;bottom:14px;left:16px;font-family:var(--font-dm-mono),monospace;font-size:.68rem;letter-spacing:.14em;color:var(--ice);text-shadow:0 1px 8px rgba(8,16,32,.8)}
 .story-copy h2{font-size:clamp(1.7rem,4vw,2.8rem);text-transform:uppercase;margin:14px 0 20px}
 .story-copy p{color:var(--powder);margin-bottom:18px}
@@ -469,9 +477,8 @@ footer::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;back
   .cta-banner{padding:clamp(32px,7vw,44px)}
   .cta-banner::after{font-size:5rem;right:-16px;bottom:-28px}
 
-  /* Filmstrip: volgende foto half zichtbaar (peek), uitgelijnd met sectiemarge */
-  .strip{scroll-padding-left:4vw}
-  .strip figure{width:min(300px,78vw);scroll-snap-align:start}
+  /* Filmstrip: volgende foto half zichtbaar (peek) door smallere figures */
+  .strip figure{width:min(300px,78vw)}
 
   /* Store locator: chips horizontaal scrollbaar (geen wrap), lijst + kaart compacter */
   .locator-shell>*{min-width:0}
