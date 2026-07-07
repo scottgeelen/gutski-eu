@@ -1,22 +1,41 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import type { Dealer } from "@/lib/types";
+import type { LatLng } from "@/lib/geo";
 import type { Map as LeafletMap, Marker } from "leaflet";
+
+const esc = (s: string) =>
+  s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]!));
+
+function popupHtml(d: Dealer, routeLabel: string) {
+  const url = `https://www.google.com/maps/dir/?api=1&destination=${d.lat},${d.lng}`;
+  return (
+    `<b>${esc(d.name)}</b>` +
+    `<br><span style="color:#9DBBDA;font-size:.85rem">${esc(d.address)}, ${esc(d.city)}</span>` +
+    `<br><a href="${url}" target="_blank" rel="noopener" ` +
+    `style="color:#5FB2FF;font-weight:700;font-size:.82rem;display:inline-block;margin-top:8px">${esc(routeLabel)}</a>`
+  );
+}
 
 export default function DealerMap({
   dealers,
   visibleIds,
   focusId,
+  origin,
+  routeLabel,
   onMarkerClick,
 }: {
   dealers: Dealer[];
   visibleIds: Set<string>;
   focusId: string | null;
+  origin: (LatLng & { label?: string }) | null;
+  routeLabel: string;
   onMarkerClick: (id: string) => void;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<LeafletMap | null>(null);
   const markersRef = useRef<Record<string, Marker>>({});
+  const originMarkerRef = useRef<Marker | null>(null);
   const LRef = useRef<typeof import("leaflet") | null>(null);
   // Touch-vergrendeling: op touch-devices start de kaart "locked" (geen drag)
   // met een overlay, zodat de kaart de paginascroll niet kaapt.
@@ -37,18 +56,17 @@ export default function DealerMap({
         scrollWheelZoom: false,
         dragging: !isTouch,
       }).setView([50.5, 8.0], 5);
-      L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+      // CARTO Voyager: lichter, met straatnamen en POI's — gratis, geen key
+      L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
         attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
-        maxZoom: 19,
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>',
+        maxZoom: 20,
       }).addTo(map);
       for (const d of dealers) {
         const icon = L.divIcon({ className: "", html: '<div class="gts-pin"></div>', iconSize: [16, 16], iconAnchor: [8, 8] });
         const m = L.marker([d.lat, d.lng], { icon })
           .addTo(map)
-          .bindPopup(
-            `<b>${d.name}</b><br><span style="color:#9DBBDA;font-size:.85rem">${d.address}, ${d.city}</span>`
-          );
+          .bindPopup(popupHtml(d, routeLabel));
         m.on("click", () => onMarkerClick(d.id));
         markersRef.current[d.id] = m;
       }
@@ -63,6 +81,7 @@ export default function DealerMap({
       mapRef.current?.remove();
       mapRef.current = null;
       markersRef.current = {};
+      originMarkerRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -93,7 +112,8 @@ export default function DealerMap({
     };
   }, [touch, active]);
 
-  // Zichtbaarheid van markers bij filteren
+  // Zichtbaarheid van markers bij filteren. Bounds alleen hier als er GEEN
+  // zoekpunt is (met zoekpunt regelt het origin-effect de uitsnede).
   useEffect(() => {
     const map = mapRef.current;
     const L = LRef.current;
@@ -103,13 +123,47 @@ export default function DealerMap({
       if (show && !map.hasLayer(m)) m.addTo(map);
       if (!show && map.hasLayer(m)) map.removeLayer(m);
     }
+    if (origin) return;
     const rows = dealers.filter((d) => visibleIds.has(d.id));
     if (rows.length)
       map.flyToBounds(
         L.latLngBounds(rows.map((d) => [d.lat, d.lng] as [number, number])).pad(0.3),
         { duration: 0.9 }
       );
-  }, [visibleIds, dealers]);
+  }, [visibleIds, dealers, origin]);
+
+  // Zoekpunt: aparte marker + pant/zoomt naar zoekpunt + dichtstbijzijnde winkels
+  useEffect(() => {
+    const map = mapRef.current;
+    const L = LRef.current;
+    if (!map || !L) return;
+    if (originMarkerRef.current) {
+      map.removeLayer(originMarkerRef.current);
+      originMarkerRef.current = null;
+    }
+    if (!origin) return;
+    const icon = L.divIcon({
+      className: "",
+      html: '<div class="gts-pin gts-pin-origin"></div>',
+      iconSize: [22, 22],
+      iconAnchor: [11, 11],
+    });
+    const om = L.marker([origin.lat, origin.lng], { icon, zIndexOffset: 1000 }).addTo(map);
+    if (origin.label) om.bindPopup(`<b>${esc(origin.label)}</b>`);
+    originMarkerRef.current = om;
+
+    const visible = dealers.filter((d) => visibleIds.has(d.id));
+    const nearest = visible
+      .map((d) => ({ d, dist: (d.lat - origin.lat) ** 2 + (d.lng - origin.lng) ** 2 }))
+      .sort((a, b) => a.dist - b.dist)
+      .slice(0, 4)
+      .map((x) => x.d);
+    const pts: [number, number][] = [
+      [origin.lat, origin.lng],
+      ...nearest.map((d) => [d.lat, d.lng] as [number, number]),
+    ];
+    map.flyToBounds(L.latLngBounds(pts).pad(0.35), { duration: 0.9, maxZoom: 12 });
+  }, [origin, dealers, visibleIds]);
 
   // Focus op geselecteerde dealer
   useEffect(() => {
