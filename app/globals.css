@@ -53,9 +53,12 @@ nav .logo-mark{height:38px;width:31px}
 .nav-links{display:flex;gap:30px;align-items:center}
 .nav-links a{font-size:.92rem;font-weight:500;color:var(--powder);transition:color .2s}
 .nav-links a:hover,.nav-links a:focus-visible{color:var(--ice)}
-.lang{display:flex;border:1px solid var(--line);border-radius:99px;overflow:hidden;font-family:var(--font-dm-mono),monospace;font-size:.72rem}
-.lang button{background:none;border:0;color:var(--powder);padding:7px 13px;cursor:pointer;letter-spacing:.1em}
-.lang button.on{background:var(--glacier);color:var(--night);font-weight:500}
+/* Taalwissel als segmented control: globe + gescheiden NL | DE | EN */
+.lang{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:99px;overflow:hidden;background:rgba(10,19,34,.35);font-family:var(--font-dm-mono),monospace;font-size:.72rem}
+.lang-globe{display:inline-flex;align-items:center;padding:0 7px 0 11px;color:var(--powder);opacity:.75}
+.lang a{padding:7px 12px;color:var(--powder);letter-spacing:.08em;line-height:1;border-left:1px solid var(--line);transition:background .2s,color .2s}
+.lang a:hover,.lang a:focus-visible{color:var(--ice);background:rgba(95,178,255,.10)}
+.lang a.on{background:var(--glacier);color:var(--night);font-weight:600}
 .btn{
   display:inline-flex;align-items:center;gap:9px;
   background:var(--glacier);color:var(--night);
@@ -110,8 +113,7 @@ nav .logo-mark{height:38px;width:31px}
 .mobile-menu-links a:hover,.mobile-menu-links a:active{color:var(--glacier)}
 .mobile-menu-foot{margin-top:auto;display:flex;flex-direction:column;gap:20px;padding-top:24px}
 .mobile-menu-foot .lang{align-self:flex-start;font-size:.82rem}
-.mobile-menu-foot .lang a{min-height:44px;display:inline-flex;align-items:center;color:var(--powder);padding:11px 18px;letter-spacing:.1em;transition:background .2s,color .2s}
-.mobile-menu-foot .lang a.on{background:var(--glacier);color:var(--night);font-weight:600}
+.mobile-menu-foot .lang-globe{padding-left:13px}
 .mobile-menu-foot .btn{justify-content:center;width:100%}
 
 /* ---------- HERO ---------- */
@@ -124,7 +126,14 @@ header{
 #snow{position:absolute;inset:0;pointer-events:none;z-index:3}
 .hero-photo{position:absolute;inset:0;z-index:0}
 .hero-photo img{width:100%;height:100%;object-fit:cover;object-position:center 30%;opacity:0;transition:opacity 1.2s ease}
-.hero-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,16,32,.78) 0%,rgba(8,16,32,.45) 45%,rgba(8,16,32,.94) 100%)}
+.hero-photo::after{
+  content:"";position:absolute;inset:0;
+  /* Extra verduistering links/onder waar de tekst staat, zodat wit/blauw
+     rustig op het beeld ligt zonder de foto te laten verdwijnen. */
+  background:
+    linear-gradient(90deg,rgba(8,16,32,.72) 0%,rgba(8,16,32,.40) 40%,rgba(8,16,32,0) 68%),
+    linear-gradient(180deg,rgba(8,16,32,.55) 0%,rgba(8,16,32,.30) 42%,rgba(8,16,32,.92) 100%);
+}
 header.has-photo .hero-photo img{opacity:1}
 header.has-photo .peaks{opacity:.3}
 .peaks{position:absolute;inset:auto 0 0 0;width:100%;z-index:1;pointer-events:none}
@@ -133,7 +142,9 @@ header.has-photo .peaks{opacity:.3}
 .hero-eyebrow{display:inline-flex;align-items:center;gap:10px;margin-bottom:26px}
 .hero-eyebrow::before{content:"";width:34px;height:2px;background:var(--glacier)}
 h1{
-  font-size:clamp(2.6rem,6vw,5rem);
+  /* Ondergrens 1.5rem: pas dan passen beide zinnen op ≤2 regels binnen de
+     smalle mobiele kolom (92vw). Desktop/tablet gebruiken de bovengrens. */
+  font-size:clamp(1.5rem,5.5vw,4.5rem);
   font-weight:800;text-transform:uppercase;
   max-width:15ch;overflow-wrap:break-word;hyphens:manual;
 }
@@ -463,7 +474,7 @@ footer::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;back
 
   /* Tap-targets minimaal 44px */
   .chips button{min-height:44px}
-  .lang a,.lang button{min-height:44px;display:inline-flex;align-items:center}
+  .lang a{min-height:44px;padding:0 16px;display:inline-flex;align-items:center;justify-content:center}
   .btn.small{min-height:44px;padding:11px 20px}
 
   /* Consistent verticaal ritme: gelijke sectie-padding + compactere sec-head */

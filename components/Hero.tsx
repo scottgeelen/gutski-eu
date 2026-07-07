@@ -40,7 +40,9 @@ export default function Hero({ t }: { t: Dictionary }) {
       <div className="wrap hero-inner">
         <span className="mono hero-eyebrow">{t.hero_eyebrow}</span>
         <h1>
-          {t.hero_title_1} <em>{t.hero_title_2}</em>
+          {t.hero_title_1}
+          <br />
+          <em>{t.hero_title_2}</em>
         </h1>
         <p className="hero-sub">{t.hero_sub}</p>
         <div className="hero-cta">
