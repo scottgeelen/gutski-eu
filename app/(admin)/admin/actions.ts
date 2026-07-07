@@ -188,6 +188,16 @@ export async function deleteDealer(formData: FormData) {
   revalidatePath("/admin");
 }
 
+export async function cycleLeadStatus(formData: FormData) {
+  const supabase = await requireUser();
+  const id = String(formData.get("id"));
+  const current = String(formData.get("status"));
+  const next = current === "new" ? "contacted" : current === "contacted" ? "done" : "new";
+  const { error } = await supabase.from("stockist_leads").update({ status: next }).eq("id", id);
+  if (error) throw new Error(error.message);
+  revalidatePath("/admin");
+}
+
 export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();

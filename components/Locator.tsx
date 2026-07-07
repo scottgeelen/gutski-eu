@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import Reveal from "./Reveal";
+import StockistTrigger from "./StockistTrigger";
 import type { Dealer } from "@/lib/types";
 import type { Dictionary } from "@/lib/dictionaries";
 import { haversineKm, formatKm, type LatLng } from "@/lib/geo";
@@ -197,7 +198,7 @@ export default function Locator({ t, dealers }: { t: Dictionary; dealers: Dealer
         <Reveal as="p" className="loc-note">
           <span>📍</span>
           <span>
-            {t.loc_note_text} <a href="mailto:b2b@gutski.eu">{t.loc_note_link}</a>
+            {t.loc_note_text} <StockistTrigger className="loc-note-cta">{t.loc_note_link}</StockistTrigger>
           </span>
         </Reveal>
       </div>

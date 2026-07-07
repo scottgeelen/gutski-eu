@@ -14,6 +14,7 @@ import Locator from "@/components/Locator";
 import Groups from "@/components/Groups";
 import CtaBanner from "@/components/CtaBanner";
 import Footer from "@/components/Footer";
+import StockistModal from "@/components/StockistModal";
 
 export const revalidate = 300; // dealers max 5 min oud
 
@@ -48,6 +49,7 @@ export default async function Page({
       <Groups t={t} />
       <CtaBanner t={t} />
       <Footer t={t} />
+      <StockistModal t={t} />
     </>
   );
 }

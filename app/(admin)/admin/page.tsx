@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import type { Dealer } from "@/lib/types";
-import { createDealer, updateDealer, toggleDealer, deleteDealer, signOut } from "./actions";
+import type { Dealer, StockistLead } from "@/lib/types";
+import { createDealer, updateDealer, toggleDealer, deleteDealer, cycleLeadStatus, signOut } from "./actions";
 import DealerForm from "./DealerForm";
 
 export const metadata = { title: "GUTSKI Admin — Verkooppunten", robots: { index: false } };
@@ -14,6 +14,18 @@ export default async function AdminPage() {
 
   const { data } = await supabase.from("dealers").select("*").order("country").order("city");
   const dealers = (data ?? []) as Dealer[];
+
+  const { data: leadsData } = await supabase
+    .from("stockist_leads")
+    .select("*")
+    .order("created_at", { ascending: false });
+  const leads = (leadsData ?? []) as StockistLead[];
+  const newLeads = leads.filter((l) => l.status === "new").length;
+
+  const statusColor = (s: StockistLead["status"]) =>
+    s === "new" ? "var(--glacier)" : s === "contacted" ? "#E8A33D" : "var(--powder)";
+  const nextLabel = (s: StockistLead["status"]) =>
+    s === "new" ? "gecontacteerd" : s === "contacted" ? "afgehandeld" : "nieuw";
 
   return (
     <main style={{ maxWidth: 1100, margin: "0 auto", padding: "48px 20px", fontFamily: "var(--font-dm-sans),sans-serif" }}>
@@ -67,6 +79,44 @@ export default async function AdminPage() {
         Coördinaten worden automatisch uit het adres bepaald (OpenStreetMap). Klopt een pin niet? Open dan de
         sectie “Coördinaten” en corrigeer ze handmatig.
       </p>
+
+      <section style={{ marginTop: 56 }}>
+        <h2 style={{ fontFamily: "var(--font-syne),sans-serif", textTransform: "uppercase", fontSize: "1.4rem" }}>
+          Verkooppunt-aanmeldingen <span style={{ color: "var(--glacier)" }}>({newLeads} nieuw)</span>
+        </h2>
+        <p style={{ color: "var(--powder)", fontSize: ".82rem", margin: "6px 0 18px" }}>
+          {leads.length} aanmelding{leads.length === 1 ? "" : "en"} totaal, nieuwste eerst.
+        </p>
+
+        {leads.length === 0 && <p style={{ color: "var(--powder)" }}>Nog geen aanmeldingen.</p>}
+
+        <div style={{ display: "grid", gap: 12 }}>
+          {leads.map((l) => (
+            <div key={l.id} style={{ background: "var(--panel)", border: "1px solid var(--line)", borderRadius: 14, padding: "16px 18px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "baseline", flexWrap: "wrap" }}>
+                <b>{l.company}</b>
+                <span className="mono" style={{ fontSize: ".7rem", color: statusColor(l.status) }}>{l.status.toUpperCase()}</span>
+              </div>
+              <div style={{ color: "var(--powder)", fontSize: ".88rem", marginTop: 8, display: "grid", gap: 4 }}>
+                <span>
+                  {l.contact_name} · <a href={`mailto:${l.email}`} style={{ color: "var(--glacier)" }}>{l.email}</a>
+                  {l.phone ? ` · ${l.phone}` : ""}
+                </span>
+                <span>{[l.city, l.country].filter(Boolean).join(", ") || "—"}</span>
+                {l.message && <span style={{ whiteSpace: "pre-wrap", color: "var(--ice)" }}>{l.message}</span>}
+                <span className="mono" style={{ fontSize: ".7rem" }}>
+                  {new Date(l.created_at).toLocaleString("nl-NL", { dateStyle: "medium", timeStyle: "short" })}
+                </span>
+              </div>
+              <form action={cycleLeadStatus} style={{ marginTop: 12 }}>
+                <input type="hidden" name="id" value={l.id} />
+                <input type="hidden" name="status" value={l.status} />
+                <button className="btn ghost small" type="submit">Markeer als {nextLabel(l.status)}</button>
+              </form>
+            </div>
+          ))}
+        </div>
+      </section>
     </main>
   );
 }

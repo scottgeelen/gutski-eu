@@ -1,4 +1,5 @@
 import LogoMark from "./Logo";
+import StockistTrigger from "./StockistTrigger";
 import type { Dictionary } from "@/lib/dictionaries";
 
 export default function Footer({ t }: { t: Dictionary }) {
@@ -26,7 +27,7 @@ export default function Footer({ t }: { t: Dictionary }) {
           <div>
             <h3>Shop</h3>
             <a href="https://skipullies.com" target="_blank" rel="noopener">skipullies.com ↗</a>
-            <a href="mailto:b2b@gutski.eu">{t.foot_b2b}</a>
+            <StockistTrigger>{t.foot_b2b}</StockistTrigger>
             <a href="mailto:info@gutski.eu">info@gutski.eu</a>
           </div>
           <div>
