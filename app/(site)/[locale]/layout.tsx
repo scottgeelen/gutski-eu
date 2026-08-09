@@ -14,6 +14,10 @@ const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gutski.eu";
 
 const OG_LOCALE: Record<Locale, string> = { nl: "nl_NL", de: "de_DE", en: "en_GB" };
 
+// Versie-suffix dwingt social-platforms de nieuwe (gebrande) og.jpg opnieuw
+// op te halen i.p.v. de gecachete oude Livigno-foto. Verhoog bij elke wissel.
+const OG_IMAGE = "/images/og.jpg?v=2";
+
 export const viewport = { themeColor: "#0A1322" };
 
 export function generateStaticParams() {
@@ -44,7 +48,7 @@ export async function generateMetadata(
       description: t.meta_desc,
       url: localePath(locale),
       siteName: "GUTSKI",
-      images: [{ url: "/images/og.jpg", width: 1200, height: 630, alt: t.meta_title }],
+      images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: t.meta_title }],
       locale: OG_LOCALE[locale],
       alternateLocale: locales.filter((l) => l !== locale).map((l) => OG_LOCALE[l]),
       type: "website",
@@ -53,7 +57,7 @@ export async function generateMetadata(
       card: "summary_large_image",
       title: t.meta_title,
       description: t.meta_desc,
-      images: ["/images/og.jpg"],
+      images: [OG_IMAGE],
     },
   };
 }
