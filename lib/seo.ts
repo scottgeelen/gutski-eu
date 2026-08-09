@@ -1,6 +1,6 @@
 import type { Dealer } from "./types";
 
-export const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gutski.eu";
+export const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.gutski.eu";
 
 // Social-profielen — pas de handles zo nodig aan naar de echte accounts.
 export const SOCIALS = {

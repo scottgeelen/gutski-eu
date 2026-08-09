@@ -10,7 +10,7 @@ const syne = Syne({ subsets: ["latin"], weight: ["700", "800"], variable: "--fon
 const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-dm-sans" });
 const dmMono = DM_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-dm-mono" });
 
-const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gutski.eu";
+const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.gutski.eu";
 
 const OG_LOCALE: Record<Locale, string> = { nl: "nl_NL", de: "de_DE", en: "en_GB" };
 
