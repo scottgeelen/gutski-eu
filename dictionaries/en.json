@@ -95,5 +95,11 @@
   "b2b_success": "Thanks! We’ll get in touch as soon as possible.",
   "b2b_error": "Something went wrong. Please try again later or email us.",
   "b2b_required": "Please fill in the required fields with a valid email address.",
-  "b2b_close": "Close"
+  "b2b_close": "Close",
+  "b2b_confirm_subject": "Thanks for your GUTSKI stockist application",
+  "b2b_confirm_heading": "Thanks for your interest in GUTSKI",
+  "b2b_confirm_intro": "We’ve received your application to become a GUTSKI stockist and will get in touch as soon as possible.",
+  "b2b_confirm_received": "Here’s what we received:",
+  "b2b_confirm_outro": "Learn more about the brand at gutski.eu; shop the full collection at skipullies.com.",
+  "b2b_confirm_signoff": "Team GUTSKI"
 }

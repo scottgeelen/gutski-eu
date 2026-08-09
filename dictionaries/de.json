@@ -95,5 +95,11 @@
   "b2b_success": "Danke! Wir melden uns so schnell wie möglich.",
   "b2b_error": "Etwas ist schiefgelaufen. Versuch es später noch einmal oder schreib uns.",
   "b2b_required": "Bitte fülle die Pflichtfelder mit einer gültigen E-Mail-Adresse aus.",
-  "b2b_close": "Schließen"
+  "b2b_close": "Schließen",
+  "b2b_confirm_subject": "Danke für deine Anfrage als GUTSKI-Händler",
+  "b2b_confirm_heading": "Danke für dein Interesse an GUTSKI",
+  "b2b_confirm_intro": "Wir haben deine Anfrage als GUTSKI-Händler erhalten und melden uns so schnell wie möglich bei dir.",
+  "b2b_confirm_received": "Das haben wir von dir erhalten:",
+  "b2b_confirm_outro": "Mehr über die Marke findest du auf gutski.eu; die komplette Kollektion gibt es auf skipullies.com.",
+  "b2b_confirm_signoff": "Dein GUTSKI-Team"
 }

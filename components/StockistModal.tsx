@@ -2,11 +2,12 @@
 import { useActionState, useEffect, useState } from "react";
 import { submitStockistLead, type LeadFormState } from "@/app/actions/stockist";
 import type { Dictionary } from "@/lib/dictionaries";
+import type { Locale } from "@/lib/i18n";
 
 const COUNTRIES = ["NL", "DE", "BE", "AT", "CH", "FR", "IT", "LU"];
 const initial: LeadFormState = { status: "idle" };
 
-function StockistForm({ t, onClose }: { t: Dictionary; onClose: () => void }) {
+function StockistForm({ t, locale, onClose }: { t: Dictionary; locale: Locale; onClose: () => void }) {
   const [state, formAction, pending] = useActionState(submitStockistLead, initial);
 
   if (state.status === "ok") {
@@ -21,6 +22,8 @@ function StockistForm({ t, onClose }: { t: Dictionary; onClose: () => void }) {
 
   return (
     <form action={formAction} className="b2b-form" noValidate={false}>
+      {/* Taal van het formulier → bepaalt de taal van de bevestigingsmail */}
+      <input type="hidden" name="locale" value={locale} />
       {/* Honeypot — verborgen voor mensen, ingevuld door bots */}
       <input
         type="text"
@@ -77,7 +80,7 @@ function StockistForm({ t, onClose }: { t: Dictionary; onClose: () => void }) {
   );
 }
 
-export default function StockistModal({ t }: { t: Dictionary }) {
+export default function StockistModal({ t, locale }: { t: Dictionary; locale: Locale }) {
   const [open, setOpen] = useState(false);
   const [seq, setSeq] = useState(0); // remount de form bij elke opening (frisse state)
 
@@ -119,7 +122,7 @@ export default function StockistModal({ t }: { t: Dictionary }) {
         </button>
         <h2 id="b2b-title">{t.b2b_title}</h2>
         <p className="modal-intro">{t.b2b_intro}</p>
-        <StockistForm key={seq} t={t} onClose={() => setOpen(false)} />
+        <StockistForm key={seq} t={t} locale={locale} onClose={() => setOpen(false)} />
       </div>
     </div>
   );

@@ -49,7 +49,7 @@ export default async function Page({
       <Groups t={t} />
       <CtaBanner t={t} />
       <Footer t={t} />
-      <StockistModal t={t} />
+      <StockistModal t={t} locale={locale as Locale} />
     </>
   );
 }

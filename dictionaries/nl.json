@@ -95,5 +95,11 @@
   "b2b_success": "Bedankt! We nemen zo snel mogelijk contact op.",
   "b2b_error": "Er ging iets mis. Probeer het later opnieuw of mail ons.",
   "b2b_required": "Vul de verplichte velden in met een geldig e-mailadres.",
-  "b2b_close": "Sluiten"
+  "b2b_close": "Sluiten",
+  "b2b_confirm_subject": "Bedankt voor je aanmelding als GUTSKI-verkooppunt",
+  "b2b_confirm_heading": "Bedankt voor je interesse in GUTSKI",
+  "b2b_confirm_intro": "We hebben je aanmelding als GUTSKI-verkooppunt in goede orde ontvangen en nemen zo snel mogelijk contact met je op.",
+  "b2b_confirm_received": "Dit hebben we van je ontvangen:",
+  "b2b_confirm_outro": "Meer over het merk lees je op gutski.eu; de volledige collectie shop je op skipullies.com.",
+  "b2b_confirm_signoff": "Team GUTSKI"
 }

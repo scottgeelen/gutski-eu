@@ -1,9 +1,17 @@
 "use server";
 import { createClient } from "@/lib/supabase/server";
+import { getDictionary, type Dictionary } from "@/lib/dictionaries";
+import { isLocale, defaultLocale, type Locale } from "@/lib/i18n";
 
 export type LeadFormState = { status: "idle" | "ok" | "error" };
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Resend is geverifieerd op het subdomein send.gutski.eu (SPF/DKIM/MX daar) —
+// afzender MOET binnen dat domein vallen, anders belanden mails in spam.
+const FROM = "GUTSKI <noreply@send.gutski.eu>";
+const NOTIFY_TO = "scott@sport2000parkstad.nl";
+const REPLY_TO = "info@gutski.eu"; // Cloudflare Email Routing → Scott
 
 type Lead = {
   company: string;
@@ -15,20 +23,14 @@ type Lead = {
   message: string | null;
 };
 
+type Resend = InstanceType<typeof import("resend").Resend>;
+
 const esc = (s: string) =>
   s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]!));
 
-/** Stuurt een e-mailnotificatie via Resend. Faalt NOOIT hard: ontbreekt de
- *  key of gaat het mis, dan loggen we een waarschuwing en gaan we door. */
-async function notify(lead: Lead) {
-  const key = process.env.RESEND_API_KEY;
-  if (!key) {
-    console.warn("[stockist] RESEND_API_KEY ontbreekt — mailnotificatie overgeslagen.");
-    return;
-  }
+/** Notificatie aan Scott — reply gaat naar de aanmelder zelf. */
+async function notifyScott(resend: Resend, lead: Lead) {
   try {
-    const { Resend } = await import("resend");
-    const resend = new Resend(key);
     const rows: [string, string][] = [
       ["Bedrijf", lead.company],
       ["Contactpersoon", lead.contact_name],
@@ -52,15 +54,92 @@ async function notify(lead: Lead) {
       `</table>`;
 
     await resend.emails.send({
-      from: "GUTSKI website <noreply@gutski.eu>",
-      to: "scott@sport2000parkstad.nl",
+      from: FROM,
+      to: NOTIFY_TO,
       replyTo: lead.email,
       subject: `Nieuwe verkooppunt-aanmelding: ${lead.company}`,
       text,
       html,
     });
   } catch (e) {
-    console.warn("[stockist] Resend-mail mislukt:", e);
+    console.warn("[stockist] notificatiemail aan Scott mislukt:", e);
+  }
+}
+
+/** Bevestiging aan de aanmelder, in de taal van het formulier. */
+async function confirmToApplicant(resend: Resend, lead: Lead, t: Dictionary) {
+  try {
+    const summary: [string, string][] = [
+      [t.b2b_company, lead.company],
+      [t.b2b_contact, lead.contact_name],
+      [t.b2b_city, lead.city || "—"],
+    ];
+
+    const text =
+      `${t.b2b_confirm_heading}\n\n${t.b2b_confirm_intro}\n\n` +
+      `${t.b2b_confirm_received}\n` +
+      summary.map(([k, v]) => `- ${k}: ${v}`).join("\n") +
+      `\n\n${t.b2b_confirm_outro}\n\n${t.b2b_confirm_signoff}\ngutski.eu · skipullies.com`;
+
+    const rows = summary
+      .map(
+        ([k, v]) =>
+          `<tr><td style="padding:8px 14px;color:#9DBBDA;width:42%;vertical-align:top">${esc(k)}</td>` +
+          `<td style="padding:8px 14px;color:#EAF2FC">${esc(v)}</td></tr>`
+      )
+      .join("");
+
+    const html =
+      `<!doctype html><html><body style="margin:0;padding:0;background:#0A1322">` +
+      `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0A1322;font-family:Arial,Helvetica,sans-serif">` +
+      `<tr><td align="center" style="padding:32px 16px">` +
+      `<table role="presentation" width="480" cellpadding="0" cellspacing="0" style="max-width:480px;width:100%;background:#0F1D31;border:1px solid rgba(157,187,218,.2);border-radius:14px">` +
+      `<tr><td style="padding:26px 28px 6px">` +
+      `<div style="font-size:20px;font-weight:bold;letter-spacing:2px;color:#EAF2FC">GUT<span style="color:#5FB2FF">SKI</span></div>` +
+      `</td></tr>` +
+      `<tr><td style="padding:6px 28px 26px">` +
+      `<h1 style="margin:12px 0 10px;font-size:20px;color:#EAF2FC">${esc(t.b2b_confirm_heading)}</h1>` +
+      `<p style="margin:0 0 18px;font-size:14px;line-height:1.6;color:#9DBBDA">${esc(t.b2b_confirm_intro)}</p>` +
+      `<p style="margin:0 0 8px;font-size:13px;color:#9DBBDA">${esc(t.b2b_confirm_received)}</p>` +
+      `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;background:#13253E;border-radius:10px">${rows}</table>` +
+      `<p style="margin:20px 0 0;font-size:13px;line-height:1.6;color:#9DBBDA">${esc(t.b2b_confirm_outro)}</p>` +
+      `<p style="margin:18px 0 0;font-size:14px;color:#EAF2FC"><b>${esc(t.b2b_confirm_signoff)}</b><br>` +
+      `<a href="https://www.gutski.eu" style="color:#5FB2FF;text-decoration:none">gutski.eu</a> · ` +
+      `<a href="https://skipullies.com" style="color:#5FB2FF;text-decoration:none">skipullies.com</a></p>` +
+      `</td></tr></table></td></tr></table></body></html>`;
+
+    await resend.emails.send({
+      from: FROM,
+      to: lead.email,
+      replyTo: REPLY_TO,
+      subject: t.b2b_confirm_subject,
+      text,
+      html,
+    });
+  } catch (e) {
+    console.warn("[stockist] bevestigingsmail aan aanmelder mislukt:", e);
+  }
+}
+
+/** Verstuurt beide mails onafhankelijk. Faalt NOOIT hard: ontbreekt de key of
+ *  gaat een van beide mis, dan loggen we en gaan we door. */
+async function sendMails(lead: Lead, locale: Locale) {
+  const key = process.env.RESEND_API_KEY;
+  if (!key) {
+    console.warn("[stockist] RESEND_API_KEY ontbreekt — mails overgeslagen.");
+    return;
+  }
+  try {
+    const { Resend } = await import("resend");
+    const resend = new Resend(key);
+    const t = await getDictionary(locale);
+    // allSettled: de ene mail blokkeert de andere niet.
+    await Promise.allSettled([
+      notifyScott(resend, lead),
+      confirmToApplicant(resend, lead, t),
+    ]);
+  } catch (e) {
+    console.warn("[stockist] mailverzending mislukt:", e);
   }
 }
 
@@ -91,6 +170,9 @@ export async function submitStockistLead(
     return { status: "error" };
   }
 
+  const localeRaw = String(formData.get("locale") ?? "");
+  const locale: Locale = isLocale(localeRaw) ? localeRaw : defaultLocale;
+
   // Supabase-insert is leidend: lukt die, dan is de aanmelding binnen.
   const supabase = await createClient();
   const { error } = await supabase.from("stockist_leads").insert({ ...lead, status: "new" });
@@ -99,8 +181,8 @@ export async function submitStockistLead(
     return { status: "error" };
   }
 
-  // Mail is bijzaak — mag de succesmelding nooit blokkeren.
-  await notify(lead);
+  // Mails zijn bijzaak — mogen de succesmelding nooit blokkeren.
+  await sendMails(lead, locale);
 
   return { status: "ok" };
 }
