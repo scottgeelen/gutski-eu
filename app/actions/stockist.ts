@@ -7,9 +7,9 @@ export type LeadFormState = { status: "idle" | "ok" | "error" };
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// Resend is geverifieerd op het subdomein send.gutski.eu (SPF/DKIM/MX daar) —
-// afzender MOET binnen dat domein vallen, anders belanden mails in spam.
-const FROM = "GUTSKI <noreply@send.gutski.eu>";
+// In Resend is het domein gutski.eu geverifieerd; send.gutski.eu is enkel het
+// interne bounce-subdomein. Afzender moet dus op gutski.eu staan.
+const FROM = "GUTSKI <noreply@gutski.eu>";
 const NOTIFY_TO = "scott@sport2000parkstad.nl";
 const REPLY_TO = "info@gutski.eu"; // Cloudflare Email Routing → Scott
 
@@ -53,7 +53,7 @@ async function notifyScott(resend: Resend, lead: Lead) {
         .join("") +
       `</table>`;
 
-    await resend.emails.send({
+    const { data, error } = await resend.emails.send({
       from: FROM,
       to: NOTIFY_TO,
       replyTo: lead.email,
@@ -61,8 +61,16 @@ async function notifyScott(resend: Resend, lead: Lead) {
       text,
       html,
     });
+    if (error) {
+      console.error(
+        "[stockist] notificatiemail aan Scott geweigerd door Resend:",
+        JSON.stringify({ name: error.name, message: error.message, statusCode: (error as { statusCode?: number }).statusCode })
+      );
+    } else {
+      console.info(`[stockist] notificatiemail aan Scott verstuurd (id ${data?.id ?? "?"})`);
+    }
   } catch (e) {
-    console.warn("[stockist] notificatiemail aan Scott mislukt:", e);
+    console.error("[stockist] notificatiemail aan Scott — uitzondering bij verzenden:", e);
   }
 }
 
@@ -108,7 +116,7 @@ async function confirmToApplicant(resend: Resend, lead: Lead, t: Dictionary) {
       `<a href="https://skipullies.com" style="color:#5FB2FF;text-decoration:none">skipullies.com</a></p>` +
       `</td></tr></table></td></tr></table></body></html>`;
 
-    await resend.emails.send({
+    const { data, error } = await resend.emails.send({
       from: FROM,
       to: lead.email,
       replyTo: REPLY_TO,
@@ -116,8 +124,16 @@ async function confirmToApplicant(resend: Resend, lead: Lead, t: Dictionary) {
       text,
       html,
     });
+    if (error) {
+      console.error(
+        "[stockist] bevestigingsmail aan aanmelder geweigerd door Resend:",
+        JSON.stringify({ name: error.name, message: error.message, statusCode: (error as { statusCode?: number }).statusCode })
+      );
+    } else {
+      console.info(`[stockist] bevestigingsmail aan aanmelder verstuurd (id ${data?.id ?? "?"})`);
+    }
   } catch (e) {
-    console.warn("[stockist] bevestigingsmail aan aanmelder mislukt:", e);
+    console.error("[stockist] bevestigingsmail aan aanmelder — uitzondering bij verzenden:", e);
   }
 }
 
