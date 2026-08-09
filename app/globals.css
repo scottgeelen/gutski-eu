@@ -131,32 +131,31 @@ header{
   /* Extra verduistering links/onder waar de tekst staat, zodat wit/blauw
      rustig op het beeld ligt zonder de foto te laten verdwijnen. */
   background:
-    linear-gradient(90deg,rgba(8,16,32,.72) 0%,rgba(8,16,32,.40) 40%,rgba(8,16,32,0) 68%),
+    linear-gradient(90deg,rgba(8,16,32,.78) 0%,rgba(8,16,32,.46) 44%,rgba(8,16,32,0) 72%),
     linear-gradient(180deg,rgba(8,16,32,.55) 0%,rgba(8,16,32,.30) 42%,rgba(8,16,32,.92) 100%);
 }
 header.has-photo .hero-photo img{opacity:1}
 header.has-photo .peaks{opacity:.3}
 .peaks{position:absolute;inset:auto 0 0 0;width:100%;z-index:1;pointer-events:none}
 .peaks svg{display:block;width:100%;height:auto}
-.hero-inner{position:relative;z-index:4;padding:140px 0 180px}
+.hero-inner{position:relative;z-index:4;padding:118px 0 150px}
 .hero-eyebrow{display:inline-flex;align-items:center;gap:10px;margin-bottom:26px}
 .hero-eyebrow::before{content:"";width:34px;height:2px;background:var(--glacier)}
 h1{
-  /* Ondergrens 1.5rem: pas dan passen beide zinnen op ≤2 regels binnen de
-     smalle mobiele kolom (92vw). Desktop/tablet gebruiken de bovengrens. */
-  font-size:clamp(1.5rem,5.5vw,4.5rem);
+  /* Compacter: kleinere bovengrens + krappe regelafstand. Ondergrens klein
+     genoeg zodat beide zinnen op mobiel op ≤2 regels binnen 92vw passen. */
+  font-size:clamp(1.5rem,4.5vw,3.6rem);
+  line-height:1.05;
   font-weight:800;text-transform:uppercase;
   max-width:15ch;overflow-wrap:break-word;hyphens:manual;
 }
-/* De blauwe regel mag op elk formaat afbreken i.p.v. buiten beeld te lopen.
-   Onderstreping via achtergrond-gradient: volgt de tekst per regel en steekt
-   nooit buiten de tekst uit (geen absolute ::after die overloopt). */
+/* Eén kort accentstreepje onder de hele titel — geen streep per regel. */
+h1::after{content:"";display:block;width:72px;height:3px;border-radius:2px;background:var(--glacier);margin-top:24px}
 h1 em{
   font-style:normal;color:var(--glacier);
   white-space:normal;overflow-wrap:break-word;
-  background:linear-gradient(rgba(95,178,255,.25),rgba(95,178,255,.25)) 0 100%/100% .12em no-repeat;
 }
-.hero-sub{max-width:52ch;color:var(--powder);font-size:1.12rem;margin:26px 0 38px}
+.hero-sub{max-width:52ch;color:var(--powder);font-size:1.12rem;margin:30px 0 46px}
 .hero-cta{display:flex;gap:16px;flex-wrap:wrap}
 /* Hero-entrance: gestaffeld infaden bij eerste load (80ms-stappen) */
 @keyframes heroIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
