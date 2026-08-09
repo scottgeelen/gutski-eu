@@ -131,8 +131,8 @@ header{
   /* Extra verduistering links/onder waar de tekst staat, zodat wit/blauw
      rustig op het beeld ligt zonder de foto te laten verdwijnen. */
   background:
-    linear-gradient(90deg,rgba(8,16,32,.78) 0%,rgba(8,16,32,.46) 44%,rgba(8,16,32,0) 72%),
-    linear-gradient(180deg,rgba(8,16,32,.55) 0%,rgba(8,16,32,.30) 42%,rgba(8,16,32,.92) 100%);
+    linear-gradient(90deg,rgba(8,16,32,.64) 0%,rgba(8,16,32,.34) 42%,rgba(8,16,32,0) 70%),
+    linear-gradient(180deg,rgba(8,16,32,.48) 0%,rgba(8,16,32,.24) 42%,rgba(8,16,32,.9) 100%);
 }
 header.has-photo .hero-photo img{opacity:1}
 header.has-photo .peaks{opacity:.3}
@@ -142,12 +142,12 @@ header.has-photo .peaks{opacity:.3}
 .hero-eyebrow{display:inline-flex;align-items:center;gap:10px;margin-bottom:26px}
 .hero-eyebrow::before{content:"";width:34px;height:2px;background:var(--glacier)}
 h1{
-  /* Compacter: kleinere bovengrens + krappe regelafstand. Ondergrens klein
-     genoeg zodat beide zinnen op mobiel op ≤2 regels binnen 92vw passen. */
-  font-size:clamp(1.5rem,4.5vw,3.6rem);
+  /* Korte titel (één claim) mag weer imposant. Op desktop één regel; op
+     mobiel breekt hij binnen 92vw naar twee regels — beide prima. */
+  font-size:clamp(1.5rem,6.5vw,5rem);
   line-height:1.05;
   font-weight:800;text-transform:uppercase;
-  max-width:15ch;overflow-wrap:break-word;hyphens:manual;
+  max-width:none;overflow-wrap:break-word;hyphens:manual;
 }
 /* Eén kort accentstreepje onder de hele titel — geen streep per regel. */
 h1::after{content:"";display:block;width:72px;height:3px;border-radius:2px;background:var(--glacier);margin-top:24px}
