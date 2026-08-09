@@ -53,11 +53,6 @@ export default function Hero({ t }: { t: Dictionary }) {
             {t.hero_cta2}
           </a>
         </div>
-        <div className="hero-meta">
-          <div><strong>100%</strong><span>{t.meta1}</span></div>
-          <div><strong>EU</strong><span>{t.meta2}</span></div>
-          <div><strong>1 st.</strong><span>{t.meta3}</span></div>
-        </div>
       </div>
     </header>
   );

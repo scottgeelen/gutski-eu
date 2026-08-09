@@ -23,28 +23,37 @@ export default function Story({ t }: { t: Dictionary }) {
           <p>{t.story_p1}</p>
           <p>{t.story_p2}</p>
           <p className="tagline">{t.tagline}</p>
-          <div className="story-points">
-            {[
-              [t.usp1_t, t.usp1_s],
-              [t.usp2_t, t.usp2_s],
-              [t.usp3_t, t.usp3_s],
-            ].map(([title, sub]) => (
-              <div key={title}>
-                <span className="dot" />
-                <div>
-                  <b>{title}</b>
-                  <span>{sub}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="usps" aria-label="Performance">
-            {["Thermal", "Active", "Stretch", "Soft", "Fresh"].map((u) => (
-              <span key={u}>{u}</span>
-            ))}
-          </div>
+          <p className="story-conf">
+            <a href="https://skipullies.com" target="_blank" rel="noopener">
+              {t.conf_note}
+            </a>
+          </p>
         </Reveal>
       </div>
+
+      {/* Producteigenschappen — de officiële GUTSKI-iconen (label zit al in het icoon) */}
+      <Reveal className="wrap prop-grid" aria-label="Producteigenschappen">
+        <div className="prop-item">
+          <img src="/icons/icon-thermal.svg" alt="GUTSKI Thermal" />
+          <p>{t.prop_thermal}</p>
+        </div>
+        <div className="prop-item">
+          <img src="/icons/icon-active.svg" alt="GUTSKI Active" />
+          <p>{t.prop_active}</p>
+        </div>
+        <div className="prop-item">
+          <img src="/icons/icon-stretch.svg" alt="GUTSKI Stretch" />
+          <p>{t.prop_stretch}</p>
+        </div>
+        <div className="prop-item">
+          <img src="/icons/icon-soft.svg" alt="GUTSKI Soft" />
+          <p>{t.prop_soft}</p>
+        </div>
+        <div className="prop-item">
+          <img src="/icons/icon-fresh-anti-odor.svg" alt="GUTSKI Fresh — Anti-Odor" />
+          <p>{t.prop_fresh}</p>
+        </div>
+      </Reveal>
     </section>
   );
 }
