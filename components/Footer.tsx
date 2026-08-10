@@ -1,9 +1,12 @@
 import LogoMark from "./Logo";
 import StockistTrigger from "./StockistTrigger";
 import { SOCIALS } from "@/lib/seo";
+import { SHOP } from "@/lib/shop";
 import type { Dictionary } from "@/lib/dictionaries";
+import type { Locale } from "@/lib/i18n";
 
-export default function Footer({ t }: { t: Dictionary }) {
+export default function Footer({ t, locale }: { t: Dictionary; locale: Locale }) {
+  const shop = SHOP[locale];
   return (
     <footer>
       <div className="wrap">
@@ -25,6 +28,9 @@ export default function Footer({ t }: { t: Dictionary }) {
           </div>
           <div>
             <h3>Shop</h3>
+            <a href={shop.women} target="_blank" rel="noopener">{t.shop_women} ↗</a>
+            <a href={shop.men} target="_blank" rel="noopener">{t.shop_men} ↗</a>
+            <a href={shop.design} target="_blank" rel="noopener">{t.shop_design} ↗</a>
             <a href="https://skipullies.com" target="_blank" rel="noopener">skipullies.com ↗</a>
             <StockistTrigger>{t.foot_b2b}</StockistTrigger>
             <a href="mailto:info@gutski.eu">info@gutski.eu</a>

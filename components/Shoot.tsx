@@ -2,24 +2,15 @@
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import Reveal from "./Reveal";
+import { SHOP } from "@/lib/shop";
 import type { Dictionary } from "@/lib/dictionaries";
+import type { Locale } from "@/lib/i18n";
 
 const SHOTS = [1, 2, 3, 4, 5, 6, 7, 8]; // /public/images/shoot-1.jpg … shoot-8.jpg
 
-// Beschrijvende alt-teksten per campagnefoto (FW26/27, Livigno)
-const ALTS: Record<number, string> = {
-  1: "Skiër in een GUTSKI skipully op de piste in Livigno",
-  2: "Close-up van de geborstelde stof van een GUTSKI pully in de sneeuw",
-  3: "Twee vrienden in GUTSKI pullies bij de gondel in Livigno",
-  4: "Model in een GUTSKI pully tegen een besneeuwde bergwand",
-  5: "Snowboarder in een GUTSKI pully tijdens de FW26/27-shoot",
-  6: "Groep in bijpassende GUTSKI pullies op het bergterras",
-  7: "Portret van een model met skibril in een GUTSKI pully",
-  8: "Après-ski moment in GUTSKI pullies bij zonsondergang in Livigno",
-};
-
-export default function Shoot({ t }: { t: Dictionary }) {
+export default function Shoot({ t, locale }: { t: Dictionary; locale: Locale }) {
   const stripRef = useRef<HTMLDivElement>(null);
+  const shop = SHOP[locale];
 
   useEffect(() => {
     const strip = stripRef.current;
@@ -168,7 +159,7 @@ export default function Shoot({ t }: { t: Dictionary }) {
             <figure key={i} style={{ transitionDelay: `${(i % SHOTS.length) * 90}ms` }} aria-hidden={dup || undefined}>
               <Image
                 src={`/images/shoot-${n}.jpg`}
-                alt={dup ? "" : ALTS[n]}
+                alt={dup ? "" : t.shoot_alts[n - 1]}
                 fill
                 sizes="(max-width: 640px) 74vw, 400px"
                 style={{ objectFit: "cover" }}
@@ -182,6 +173,14 @@ export default function Shoot({ t }: { t: Dictionary }) {
             </figure>
           );
         })}
+      </div>
+
+      {/* Zichtbare CTA-links naar de webshop (juiste taalvariant) + store locator */}
+      <div className="wrap shop-cta">
+        <a href={shop.women} target="_blank" rel="noopener">{t.shop_women} ↗</a>
+        <a href={shop.men} target="_blank" rel="noopener">{t.shop_men} ↗</a>
+        <a href={shop.design} target="_blank" rel="noopener">{t.shop_design} ↗</a>
+        <a href="#winkels" className="shop-cta-store">{t.shop_find_store} →</a>
       </div>
     </section>
   );

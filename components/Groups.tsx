@@ -3,16 +3,16 @@ import Reveal from "./Reveal";
 import type { Dictionary } from "@/lib/dictionaries";
 
 const PHOTOS = [
-  { src: "/images/groep-skiclubs.jpg", alt: "Skiclub in GUTSKI pully's op de piste in de Alpen" },
-  { src: "/images/groep-vrienden.jpg", alt: "Vriendengroep in GUTSKI pully's in de après-ski-bar" },
-  { src: "/images/groep-bedrijven.jpg", alt: "Bedrijfsgroep in GUTSKI pully's tijdens de après-ski" },
+  "/images/groep-skiclubs.jpg",
+  "/images/groep-vrienden.jpg",
+  "/images/groep-bedrijven.jpg",
 ];
 
 export default function Groups({ t }: { t: Dictionary }) {
   const cards = [
-    { ...PHOTOS[0], title: t.grp1_t, sub: t.grp1_s },
-    { ...PHOTOS[1], title: t.grp2_t, sub: t.grp2_s },
-    { ...PHOTOS[2], title: t.grp3_t, sub: t.grp3_s },
+    { src: PHOTOS[0], alt: t.group_alts[0], title: t.grp1_t, sub: t.grp1_s },
+    { src: PHOTOS[1], alt: t.group_alts[1], title: t.grp2_t, sub: t.grp2_s },
+    { src: PHOTOS[2], alt: t.group_alts[2], title: t.grp3_t, sub: t.grp3_s },
   ];
   return (
     <section id="groepen">

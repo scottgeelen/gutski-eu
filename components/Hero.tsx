@@ -21,7 +21,7 @@ export default function Hero({ t }: { t: Dictionary }) {
       <div className="hero-photo">
         <Image
           src="/images/hero.jpg"
-          alt="Skiër in een GUTSKI skipully op de besneeuwde piste in Livigno tijdens de FW26/27-campagne"
+          alt={t.hero_alt}
           fill
           priority
           sizes="100vw"

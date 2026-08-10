@@ -39,16 +39,16 @@ export default async function Page({
   return (
     <>
       <JsonLd data={organizationSchema(t.meta_desc)} />
-      {dealers.length > 0 && <JsonLd data={storesSchema(dealers)} />}
+      {dealers.length > 0 && <JsonLd data={storesSchema(dealers, locale as Locale)} />}
       <Nav t={t} locale={locale as Locale} />
       <Hero t={t} />
       <Marquee items={t.marquee} />
       <Story t={t} />
-      <Shoot t={t} />
+      <Shoot t={t} locale={locale as Locale} />
       <Locator t={t} dealers={dealers} />
       <Groups t={t} />
       <CtaBanner t={t} />
-      <Footer t={t} />
+      <Footer t={t} locale={locale as Locale} />
       <StockistModal t={t} locale={locale as Locale} />
     </>
   );

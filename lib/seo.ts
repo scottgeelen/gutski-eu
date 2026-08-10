@@ -1,6 +1,13 @@
 import type { Dealer } from "./types";
+import type { Locale } from "./i18n";
 
 export const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.gutski.eu";
+
+const STORES_NAME: Record<Locale, string> = {
+  nl: "GUTSKI verkooppunten",
+  de: "GUTSKI Händler",
+  en: "GUTSKI stores",
+};
 
 // Social-profielen — pas de handles zo nodig aan naar de echte accounts.
 export const SOCIALS = {
@@ -38,11 +45,12 @@ export function organizationSchema(description: string) {
 }
 
 /** ItemList met een Store/LocalBusiness-item per actief verkooppunt. */
-export function storesSchema(dealers: Dealer[]) {
+export function storesSchema(dealers: Dealer[], locale: Locale) {
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: "GUTSKI verkooppunten",
+    name: STORES_NAME[locale],
+    inLanguage: locale,
     numberOfItems: dealers.length,
     itemListElement: dealers.map((d, i) => ({
       "@type": "ListItem",

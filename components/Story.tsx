@@ -9,7 +9,7 @@ export default function Story({ t }: { t: Dictionary }) {
         <Reveal className="story-visual">
           <ParallaxImage
             src="/images/story.jpg"
-            alt="Model in een donkergroene GUTSKI skipully tijdens de FW26/27-fotoshoot in de bergen bij Livigno"
+            alt={t.story_alt}
             sizes="(max-width: 1020px) 92vw, 560px"
           />
           <div className="tag">
