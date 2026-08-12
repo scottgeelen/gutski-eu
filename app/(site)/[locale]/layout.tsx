@@ -14,9 +14,8 @@ const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.gutski.eu";
 
 const OG_LOCALE: Record<Locale, string> = { nl: "nl_NL", de: "de_DE", en: "en_GB" };
 
-// Versie-suffix dwingt social-platforms de nieuwe (gebrande) og.jpg opnieuw
-// op te halen i.p.v. de gecachete oude Livigno-foto. Verhoog bij elke wissel.
-const OG_IMAGE = "/images/og.jpg?v=2";
+// og:image komt van de file-convention (opengraph-image.tsx) — geen losse
+// og:image-URL hier, zodat de gegenereerde image de enige bron is.
 
 export const viewport = { themeColor: "#0A1322" };
 
@@ -44,20 +43,17 @@ export async function generateMetadata(
       },
     },
     openGraph: {
-      title: t.meta_title,
-      description: t.meta_desc,
-      url: localePath(locale),
+      // Geen title/description/url hier: Next leidt og:title, og:description en
+      // og:url af uit de pagina-metadata (title/description/canonical), zodat
+      // subpagina's (privacy/terms) hun eigen tekst tonen én de gedeelde
+      // opengraph-image blijven erven i.p.v. de home-waarden.
       siteName: "GUTSKI",
-      images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: t.meta_title }],
       locale: OG_LOCALE[locale],
       alternateLocale: locales.filter((l) => l !== locale).map((l) => OG_LOCALE[l]),
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
-      title: t.meta_title,
-      description: t.meta_desc,
-      images: [OG_IMAGE],
     },
   };
 }

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { isLocale, locales, localePath, type Locale } from "@/lib/i18n";
+import { isLocale, locales } from "@/lib/i18n";
 import { getDictionary } from "@/lib/dictionaries";
 import { localeAlternates } from "@/lib/seo";
 import { COMPANY, COUNTRY_NAME } from "@/lib/company";
@@ -22,12 +22,6 @@ export async function generateMetadata({
     title: t.page_terms_title,
     description: t.page_terms_desc,
     alternates: localeAlternates(locale, "terms"),
-    openGraph: {
-      title: t.page_terms_title,
-      description: t.page_terms_desc,
-      url: localePath(locale, "/terms"),
-      type: "article",
-    },
   };
 }
 

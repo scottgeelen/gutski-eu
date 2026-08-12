@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { isLocale, locales, localePath, type Locale } from "@/lib/i18n";
+import { isLocale, locales } from "@/lib/i18n";
 import { getDictionary } from "@/lib/dictionaries";
 import { localeAlternates } from "@/lib/seo";
 import PageShell from "@/components/PageShell";
@@ -21,12 +21,6 @@ export async function generateMetadata({
     title: t.page_privacy_title,
     description: t.page_privacy_desc,
     alternates: localeAlternates(locale, "privacy"),
-    openGraph: {
-      title: t.page_privacy_title,
-      description: t.page_privacy_desc,
-      url: localePath(locale, "/privacy"),
-      type: "article",
-    },
   };
 }
 

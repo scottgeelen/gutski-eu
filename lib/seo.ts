@@ -35,7 +35,6 @@ export function organizationSchema(description: string) {
     legalName: "RSG Brands B.V.",
     url: SITE,
     logo: `${SITE}/icon-512.png`,
-    image: `${SITE}/images/og.jpg`,
     description,
     brand: { "@type": "Brand", name: "GUTSKI" },
     sameAs: [
