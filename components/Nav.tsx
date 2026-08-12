@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import LogoMark, { LogoDefs } from "./Logo";
 import LangSwitch from "./LangSwitch";
-import { type Locale } from "@/lib/i18n";
+import { localePath, type Locale } from "@/lib/i18n";
 import type { Dictionary } from "@/lib/dictionaries";
 
 export default function Nav({ t, locale }: { t: Dictionary; locale: Locale }) {
@@ -39,9 +39,12 @@ export default function Nav({ t, locale }: { t: Dictionary; locale: Locale }) {
     };
   }, [open]);
 
+  // Ankers absoluut t.o.v. de homepage, zodat ze ook vanaf story/privacy/terms werken.
+  const home = localePath(locale);
   const links = [
-    { href: "#merk", label: t.nav_brand },
-    { href: "#winkels", label: t.nav_stores },
+    { href: `${home}#merk`, label: t.nav_brand },
+    { href: localePath(locale, "/story"), label: t.nav_story },
+    { href: `${home}#winkels`, label: t.nav_stores },
   ];
 
   const close = () => setOpen(false);
@@ -50,7 +53,7 @@ export default function Nav({ t, locale }: { t: Dictionary; locale: Locale }) {
     <>
       <nav className={scrolled ? "scrolled" : ""}>
         <LogoDefs />
-        <a className="logo" href="#top" aria-label="GUTSKI">
+        <a className="logo" href={`${home}#top`} aria-label="GUTSKI">
           <LogoMark />
           <span className="logo-word">
             GUT<span>SKI</span>
@@ -85,7 +88,7 @@ export default function Nav({ t, locale }: { t: Dictionary; locale: Locale }) {
       {/* Fullscreen overlay-paneel — sibling van <nav>, boven alles (z-index 2000) */}
       <div id="mobile-menu" className={`mobile-menu${open ? " open" : ""}`} aria-hidden={!open}>
         <div className="mobile-menu-bar">
-          <a className="logo" href="#top" aria-label="GUTSKI" onClick={close}>
+          <a className="logo" href={`${home}#top`} aria-label="GUTSKI" onClick={close}>
             <LogoMark />
             <span className="logo-word">
               GUT<span>SKI</span>

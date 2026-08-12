@@ -401,6 +401,22 @@ footer::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;back
 .foot-grid p{color:var(--powder);font-size:.92rem;max-width:34ch}
 .foot-bottom{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:28px;color:var(--powder);font-size:.82rem}
 
+/* ---------- CONTENT-PAGINA'S (story/privacy/terms) ---------- */
+.page{padding:clamp(104px,14vh,140px) 0 90px;min-height:100svh}
+.page-inner{max-width:760px}
+.prose>.mono{color:var(--glacier)}
+.prose h1{font-family:var(--font-syne),sans-serif;text-transform:uppercase;font-size:clamp(1.9rem,5vw,3rem);line-height:1.1;margin:14px 0 26px;max-width:none;overflow-wrap:break-word;hyphens:manual}
+.prose h2{font-family:var(--font-syne),sans-serif;text-transform:uppercase;font-size:1.15rem;margin:34px 0 10px}
+.prose p{color:var(--powder);font-size:1.02rem;line-height:1.7;margin-bottom:18px}
+.prose a{color:var(--glacier);font-weight:600}
+.prose a:hover,.prose a:focus-visible{text-decoration:underline}
+.prose-links{display:flex;flex-wrap:wrap;gap:12px 24px;margin:6px 0 24px}
+.prose-links a{display:inline-flex;align-items:center;gap:6px}
+.prose-meta{color:var(--powder);font-size:.85rem;margin-top:30px;opacity:.75}
+.imprint{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 24px;margin:6px 0 28px}
+.imprint h2{margin-top:0}
+.imprint-block{color:var(--ice);font-size:.95rem;line-height:1.9;margin:0}
+
 /* ---------- LINK-KNOPPEN (mailto-vervangers) ---------- */
 .linklike{background:none;border:0;padding:0;margin:0;font:inherit;color:inherit;cursor:pointer}
 .foot-grid .linklike{display:block;color:var(--powder);font-size:.92rem;margin-bottom:10px;text-align:left;transition:color .2s}

@@ -1,25 +1,31 @@
 import type { MetadataRoute } from "next";
+import { locales, localePath, type Locale } from "@/lib/i18n";
 
 // Canoniek domein (matcht canonical/hreflang/og:url). De apex gutski.eu
 // redirect naar www, dus de sitemap bevat de www-URL's.
 const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.gutski.eu";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const languages = {
-    nl: `${SITE}/`,
-    de: `${SITE}/de`,
-    en: `${SITE}/en`,
-    "x-default": `${SITE}/`,
-  };
-  const lastModified = new Date();
+// Indexeerbare pagina's ("" = homepage). Admin is auth-protected + noindex
+// (en in robots.txt uitgesloten), dus niet opgenomen.
+const PAGES = ["", "story", "privacy", "terms"] as const;
 
-  // Enige indexeerbare pagina's: de drie locale-homepages. Admin is
-  // auth-protected + noindex (en in robots.txt uitgesloten); privacy/terms
-  // zijn nog placeholder-ankers, geen echte routes.
-  return (["/", "/de", "/en"] as const).map((path) => ({
-    url: `${SITE}${path}`,
-    lastModified,
-    changeFrequency: "monthly" as const,
-    alternates: { languages },
-  }));
+export default function sitemap(): MetadataRoute.Sitemap {
+  const lastModified = new Date();
+  const abs = (locale: Locale, slug: string) =>
+    `${SITE}${localePath(locale, slug ? `/${slug}` : "/")}`;
+
+  return PAGES.flatMap((slug) => {
+    const languages = {
+      nl: abs("nl", slug),
+      de: abs("de", slug),
+      en: abs("en", slug),
+      "x-default": abs("nl", slug),
+    };
+    return locales.map((locale) => ({
+      url: abs(locale, slug),
+      lastModified,
+      changeFrequency: "monthly" as const,
+      alternates: { languages },
+    }));
+  });
 }

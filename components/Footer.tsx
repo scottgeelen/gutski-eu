@@ -3,10 +3,11 @@ import StockistTrigger from "./StockistTrigger";
 import { SOCIALS } from "@/lib/seo";
 import { SHOP } from "@/lib/shop";
 import type { Dictionary } from "@/lib/dictionaries";
-import type { Locale } from "@/lib/i18n";
+import { localePath, type Locale } from "@/lib/i18n";
 
 export default function Footer({ t, locale }: { t: Dictionary; locale: Locale }) {
   const shop = SHOP[locale];
+  const home = localePath(locale);
   return (
     <footer>
       <div className="wrap">
@@ -18,13 +19,14 @@ export default function Footer({ t, locale }: { t: Dictionary; locale: Locale })
             </a>
             <p>{t.foot_about}</p>
             <p className="mono" style={{ color: "var(--powder)", marginTop: 16, fontSize: ".68rem" }}>
-              RSG Brands B.V. · Wiebachstraat 77A · 6466 NG Kerkrade (NL)
+              RSG Brands B.V. · Geerlinglaan 12 · 6415 XE Heerlen (NL)
             </p>
           </div>
           <div>
             <h3>{t.foot_menu}</h3>
-            <a href="#merk">{t.nav_brand}</a>
-            <a href="#winkels">{t.nav_stores}</a>
+            <a href={`${home}#merk`}>{t.nav_brand}</a>
+            <a href={localePath(locale, "/story")}>{t.nav_story}</a>
+            <a href={`${home}#winkels`}>{t.nav_stores}</a>
           </div>
           <div>
             <h3>Shop</h3>
@@ -43,8 +45,11 @@ export default function Footer({ t, locale }: { t: Dictionary; locale: Locale })
           </div>
         </div>
         <div className="foot-bottom">
-          <span>© 2026 GUTSKI · RSG Brands B.V. · Kerkrade</span>
-          <span><a href="#">{t.foot_privacy}</a> · <a href="#">{t.foot_terms}</a></span>
+          <span>© 2026 GUTSKI · RSG Brands B.V. · Heerlen</span>
+          <span>
+            <a href={localePath(locale, "/privacy")}>{t.foot_privacy}</a> ·{" "}
+            <a href={localePath(locale, "/terms")}>{t.foot_terms}</a>
+          </span>
         </div>
       </div>
     </footer>

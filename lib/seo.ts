@@ -1,5 +1,5 @@
 import type { Dealer } from "./types";
-import type { Locale } from "./i18n";
+import { localePath, type Locale } from "./i18n";
 
 export const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.gutski.eu";
 
@@ -8,6 +8,16 @@ const STORES_NAME: Record<Locale, string> = {
   de: "GUTSKI Händler",
   en: "GUTSKI stores",
 };
+
+/** Absolute canonical + hreflang-alternates (nl/de/en/x-default) voor een
+ *  pagina-slug ("" = homepage). Op het canonieke www-domein. */
+export function localeAlternates(locale: Locale, slug = "") {
+  const p = (l: Locale) => `${SITE}${localePath(l, slug ? `/${slug}` : "/")}`;
+  return {
+    canonical: p(locale),
+    languages: { nl: p("nl"), de: p("de"), en: p("en"), "x-default": p("nl") },
+  };
+}
 
 // Social-profielen — pas de handles zo nodig aan naar de echte accounts.
 export const SOCIALS = {
@@ -36,9 +46,9 @@ export function organizationSchema(description: string) {
     ],
     address: {
       "@type": "PostalAddress",
-      streetAddress: "Wiebachstraat 77A",
-      postalCode: "6466 NG",
-      addressLocality: "Kerkrade",
+      streetAddress: "Geerlinglaan 12",
+      postalCode: "6415 XE",
+      addressLocality: "Heerlen",
       addressCountry: "NL",
     },
   };
