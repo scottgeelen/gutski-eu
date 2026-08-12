@@ -38,11 +38,11 @@ export default async function TermsPage({ params }: { params: Promise<{ locale: 
         <div className="imprint">
           <h2>{t.imp_h}</h2>
           <p className="imprint-block">
-            {COMPANY.name}<br />
-            {COMPANY.street}, {COMPANY.postalCity}, {COUNTRY_NAME[locale]}<br />
-            {t.imp_kvk}: {COMPANY.kvk}<br />
-            {t.imp_vat}: {COMPANY.vat}<br />
-            {t.imp_email_label}: <a href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a>
+            {COMPANY.legal.name}<br />
+            {COMPANY.legal.street}, {COMPANY.legal.postalCode} {COMPANY.legal.city}, {COUNTRY_NAME[locale]}<br />
+            {t.imp_kvk}: {COMPANY.legal.kvk}<br />
+            {t.imp_vat}: {COMPANY.legal.vat}<br />
+            {t.imp_email_label}: <a href={`mailto:${COMPANY.legal.email}`}>{COMPANY.legal.email}</a>
           </p>
         </div>
 

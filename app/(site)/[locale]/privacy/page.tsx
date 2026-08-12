@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { isLocale, locales } from "@/lib/i18n";
 import { getDictionary } from "@/lib/dictionaries";
 import { localeAlternates } from "@/lib/seo";
+import { COMPANY } from "@/lib/company";
 import PageShell from "@/components/PageShell";
 
 export function generateStaticParams() {
@@ -29,11 +30,16 @@ export default async function PrivacyPage({ params }: { params: Promise<{ locale
   if (!isLocale(locale)) notFound();
   const t = await getDictionary(locale);
 
+  // Het juridische vestigingsadres komt uit COMPANY.legal en wordt hier
+  // server-side ingevuld, zodat het niet via de gedeelde dictionary in de
+  // client-payload van elke pagina belandt — alleen hier op /privacy.
+  const legalAddress = `${COMPANY.legal.street}, ${COMPANY.legal.postalCode} ${COMPANY.legal.city}`;
+
   return (
     <PageShell t={t} locale={locale}>
       <article className="prose">
         <h1>{t.pv_h1}</h1>
-        <p>{t.pv_intro}</p>
+        <p>{t.pv_intro.replace("{address}", legalAddress)}</p>
         <h2>{t.pv_data_h}</h2>
         <p>{t.pv_data_p}</p>
         <h2>{t.pv_use_h}</h2>

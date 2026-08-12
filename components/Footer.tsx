@@ -1,6 +1,7 @@
 import LogoMark from "./Logo";
 import StockistTrigger from "./StockistTrigger";
 import { SOCIALS } from "@/lib/seo";
+import { COMPANY } from "@/lib/company";
 import { SHOP } from "@/lib/shop";
 import type { Dictionary } from "@/lib/dictionaries";
 import { localePath, type Locale } from "@/lib/i18n";
@@ -19,7 +20,7 @@ export default function Footer({ t, locale }: { t: Dictionary; locale: Locale })
             </a>
             <p>{t.foot_about}</p>
             <p className="mono" style={{ color: "var(--powder)", marginTop: 16, fontSize: ".68rem" }}>
-              RSG Brands B.V. · Geerlinglaan 12 · 6415 XE Heerlen (NL)
+              {COMPANY.visit.name} · {COMPANY.visit.street} · {COMPANY.visit.postalCode} {COMPANY.visit.city} (NL)
             </p>
           </div>
           <div>
@@ -45,7 +46,7 @@ export default function Footer({ t, locale }: { t: Dictionary; locale: Locale })
           </div>
         </div>
         <div className="foot-bottom">
-          <span>© 2026 GUTSKI · RSG Brands B.V. · Heerlen</span>
+          <span>© 2026 GUTSKI · RSG Brands B.V.</span>
           <span>
             <a href={localePath(locale, "/privacy")}>{t.foot_privacy}</a> ·{" "}
             <a href={localePath(locale, "/terms")}>{t.foot_terms}</a>

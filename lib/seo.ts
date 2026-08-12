@@ -1,5 +1,6 @@
 import type { Dealer } from "./types";
 import { localePath, type Locale } from "./i18n";
+import { COMPANY } from "./company";
 
 export const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.gutski.eu";
 
@@ -45,9 +46,9 @@ export function organizationSchema(description: string) {
     ],
     address: {
       "@type": "PostalAddress",
-      streetAddress: "Geerlinglaan 12",
-      postalCode: "6415 XE",
-      addressLocality: "Heerlen",
+      streetAddress: COMPANY.visit.street,
+      postalCode: COMPANY.visit.postalCode,
+      addressLocality: COMPANY.visit.city,
       addressCountry: "NL",
     },
   };
