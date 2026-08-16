@@ -1,8 +1,9 @@
 import Reveal from "./Reveal";
 import ParallaxImage from "./ParallaxImage";
 import type { Dictionary } from "@/lib/dictionaries";
+import { localePath, type Locale } from "@/lib/i18n";
 
-export default function Story({ t }: { t: Dictionary }) {
+export default function Story({ t, locale }: { t: Dictionary; locale: Locale }) {
   return (
     <section id="merk">
       <div className="wrap story">
@@ -53,6 +54,12 @@ export default function Story({ t }: { t: Dictionary }) {
           <img src="/icons/icon-fresh-anti-odor.svg" alt="GUTSKI Fresh — Anti-Odor" />
           <p>{t.prop_fresh}</p>
         </div>
+      </Reveal>
+
+      {/* Verdiepende content-pagina's over materiaal en waarom een skipully anders is */}
+      <Reveal className="wrap merk-links">
+        <a href={localePath(locale, "/material")}>{t.link_material} →</a>
+        <a href={localePath(locale, "/pully")}>{t.link_pully} →</a>
       </Reveal>
     </section>
   );

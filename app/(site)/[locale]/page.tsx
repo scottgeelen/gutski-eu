@@ -43,7 +43,7 @@ export default async function Page({
       <Nav t={t} locale={locale as Locale} />
       <Hero t={t} />
       <Marquee items={t.marquee} />
-      <Story t={t} />
+      <Story t={t} locale={locale as Locale} />
       <Shoot t={t} locale={locale as Locale} />
       <Locator t={t} dealers={dealers} />
       <Groups t={t} />

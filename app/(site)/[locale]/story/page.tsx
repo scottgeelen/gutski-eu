@@ -55,6 +55,10 @@ export default async function StoryPage({ params }: { params: Promise<{ locale: 
           <a href={shop.men} target="_blank" rel="noopener">{t.shop_men} ↗</a>
           <a href={`${home}#winkels`}>{t.shop_find_store} →</a>
         </p>
+        <p className="prose-links">
+          <a href={localePath(locale, "/material")}>{t.link_material} →</a>
+          <a href={localePath(locale, "/pully")}>{t.link_pully} →</a>
+        </p>
       </article>
     </PageShell>
   );

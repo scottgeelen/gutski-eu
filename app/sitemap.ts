@@ -7,7 +7,7 @@ const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.gutski.eu";
 
 // Indexeerbare pagina's ("" = homepage). Admin is auth-protected + noindex
 // (en in robots.txt uitgesloten), dus niet opgenomen.
-const PAGES = ["", "story", "privacy", "terms"] as const;
+const PAGES = ["", "story", "material", "pully", "privacy", "terms"] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
