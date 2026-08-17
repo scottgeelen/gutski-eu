@@ -39,7 +39,15 @@ export default async function StoryPage({ params }: { params: Promise<{ locale: 
   const home = localePath(locale);
 
   return (
-    <PageShell t={t} locale={locale}>
+    <PageShell
+      t={t}
+      locale={locale}
+      slug="story"
+      crumb={t.nav_story}
+      name={t.page_story_title}
+      description={t.page_story_desc}
+      type="AboutPage"
+    >
       <article className="prose">
         <span className="mono">{t.nav_story}</span>
         <h1>{t.st_h1}</h1>

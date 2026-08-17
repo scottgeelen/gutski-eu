@@ -54,6 +54,46 @@ export function organizationSchema(description: string) {
   };
 }
 
+/** WebPage-schema voor een losse contentpagina (story/material/pully/privacy/
+ *  voorwaarden). De homepage heeft Organization + ItemList; de contentpagina's
+ *  hadden tot nu toe helemaal geen structured data. */
+export function contentPageSchema(opts: {
+  locale: Locale;
+  slug: string;
+  name: string;
+  description: string;
+  type?: "WebPage" | "AboutPage";
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": opts.type ?? "WebPage",
+    name: opts.name,
+    description: opts.description,
+    url: `${SITE}${localePath(opts.locale, `/${opts.slug}`)}`,
+    inLanguage: opts.locale,
+    isPartOf: { "@type": "WebSite", name: "GUTSKI", url: SITE },
+    publisher: { "@type": "Organization", name: "GUTSKI", url: SITE },
+  };
+}
+
+/** BreadcrumbList "GUTSKI > <pagina>" — geeft Google een kruimelpad om in het
+ *  zoekresultaat te tonen in plaats van het kale URL-pad. */
+export function breadcrumbSchema(locale: Locale, slug: string, label: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "GUTSKI", item: `${SITE}${localePath(locale)}` },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: label,
+        item: `${SITE}${localePath(locale, `/${slug}`)}`,
+      },
+    ],
+  };
+}
+
 /** ItemList met een Store/LocalBusiness-item per actief verkooppunt. */
 export function storesSchema(dealers: Dealer[], locale: Locale) {
   return {

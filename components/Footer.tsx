@@ -27,14 +27,17 @@ export default function Footer({ t, locale }: { t: Dictionary; locale: Locale })
             <h3>{t.foot_menu}</h3>
             <a href={`${home}#merk`}>{t.nav_brand}</a>
             <a href={localePath(locale, "/story")}>{t.nav_story}</a>
+            <a href={localePath(locale, "/material")}>{t.link_material}</a>
+            <a href={localePath(locale, "/pully")}>{t.link_pully}</a>
             <a href={`${home}#winkels`}>{t.nav_stores}</a>
           </div>
           <div>
             <h3>Shop</h3>
+            <a href={shop.collection} target="_blank" rel="noopener">{t.shop_collection} ↗</a>
             <a href={shop.women} target="_blank" rel="noopener">{t.shop_women} ↗</a>
             <a href={shop.men} target="_blank" rel="noopener">{t.shop_men} ↗</a>
+            <a href={shop.ischgl} target="_blank" rel="noopener">{t.shop_ischgl} ↗</a>
             <a href={shop.design} target="_blank" rel="noopener">{t.shop_design} ↗</a>
-            <a href="https://skipullies.com" target="_blank" rel="noopener">skipullies.com ↗</a>
             <StockistTrigger>{t.foot_b2b}</StockistTrigger>
             <a href="mailto:info@gutski.eu">info@gutski.eu</a>
           </div>

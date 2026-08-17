@@ -45,7 +45,14 @@ export default async function MaterialPage({ params }: { params: Promise<{ local
   const shop = SHOP[locale];
 
   return (
-    <PageShell t={t} locale={locale}>
+    <PageShell
+      t={t}
+      locale={locale}
+      slug="material"
+      crumb={t.link_material}
+      name={t.page_material_title}
+      description={t.page_material_desc}
+    >
       <article className="prose">
         <span className="mono">{t.story_eyebrow}</span>
         <h1>{t.mat_h1}</h1>

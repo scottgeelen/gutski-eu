@@ -31,7 +31,14 @@ export default async function TermsPage({ params }: { params: Promise<{ locale: 
   const t = await getDictionary(locale);
 
   return (
-    <PageShell t={t} locale={locale}>
+    <PageShell
+      t={t}
+      locale={locale}
+      slug="terms"
+      crumb={t.foot_terms}
+      name={t.page_terms_title}
+      description={t.page_terms_desc}
+    >
       <article className="prose">
         <h1>{t.tm_h1}</h1>
 

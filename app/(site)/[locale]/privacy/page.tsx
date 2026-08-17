@@ -36,7 +36,14 @@ export default async function PrivacyPage({ params }: { params: Promise<{ locale
   const legalAddress = `${COMPANY.legal.street}, ${COMPANY.legal.postalCode} ${COMPANY.legal.city}`;
 
   return (
-    <PageShell t={t} locale={locale}>
+    <PageShell
+      t={t}
+      locale={locale}
+      slug="privacy"
+      crumb={t.foot_privacy}
+      name={t.page_privacy_title}
+      description={t.page_privacy_desc}
+    >
       <article className="prose">
         <h1>{t.pv_h1}</h1>
         <p>{t.pv_intro.replace("{address}", legalAddress)}</p>

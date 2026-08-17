@@ -35,7 +35,14 @@ export default async function PullyPage({ params }: { params: Promise<{ locale: 
   const shop = SHOP[locale];
 
   return (
-    <PageShell t={t} locale={locale}>
+    <PageShell
+      t={t}
+      locale={locale}
+      slug="pully"
+      crumb={t.link_pully}
+      name={t.page_pully_title}
+      description={t.page_pully_desc}
+    >
       <article className="prose">
         <span className="mono">{t.story_eyebrow}</span>
         <h1>{t.pl_h1}</h1>
