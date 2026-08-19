@@ -59,5 +59,9 @@ export async function middleware(request: NextRequest) {
 export const config = {
   // Sla api, _next en alle bestanden met een extensie over (manifest.webmanifest,
   // icon.svg, apple-icon.png, icon-*.png, images, robots.txt, sitemap.xml, …).
-  matcher: ["/((?!api|_next|.*\\.).*)"],
+  // sitemap.xml en robots.txt staan óók expliciet in de lookahead: die mogen
+  // nooit door locale-detectie of redirects heen, ook niet als de dot-regel
+  // hierna ooit wordt versoepeld. Zoekmachines krijgen ze zo één-op-één zoals
+  // Next ze genereert (geen 308-redirect, geen locale-rewrite).
+  matcher: ["/((?!api|_next|sitemap\\.xml|robots\\.txt|.*\\.).*)"],
 };
